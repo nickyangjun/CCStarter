@@ -166,4 +166,4 @@ com.company.component.auth.autoconfigure.AuthSecurityAutoConfiguration
 | 3 | JwtService + Filter + Security 链 | ✅（白名单 `AntPathRequestMatcher`，避免切片测试依赖 MVC introspector） |
 | 4 | 自动配置 + imports | ✅ |
 | 5 | 单测 + sample | ✅ |
-| 6～7 | 发布 | 待做 |
+| 6～7 | 发布 | ✅ SNAPSHOT 可发布（见 [integration.md](./integration.md)） |

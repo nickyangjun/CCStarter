@@ -4,3 +4,6 @@ component:
   exception:
     enabled: true
     expose-stack-trace: false   # 生产禁止暴露堆栈
+  auth:
+    enabled: true
+    jwt-secret: ${JWT_SECRET}   # 正式环境由运维/配置中心注入

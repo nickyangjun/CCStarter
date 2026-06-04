@@ -1,6 +1,6 @@
 # common-auth-autoconfigure
 
-JWT + Spring Security 自动配置模块（**P2 Phase 3 已实现**）。
+JWT + Spring Security 自动配置模块（**可发布** SNAPSHOT）。
 
 | 项 | 值 |
 |----|-----|

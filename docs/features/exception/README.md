@@ -22,7 +22,7 @@
 
 - 不依赖具体业务表、不实现业务错误码表维护 UI。
 - 不处理非 Web 环境（Reactive 一期仅文档标注，实现挂 `SERVLET` 条件）。
-- 不替代 Spring Security 的 401/403 入口（与 auth 模块分阶段集成）。
+- 与 **common-auth** 集成后：`AuthenticationException` / `AccessDeniedException` 映射为 401/403 统一 JSON（Filter 链由 `ApiErrorResponseHttpWriter` 输出）。
 - 不实现国际化消息中心（后续 MINOR 可加 `message-source` 配置）。
 - 不自动修改其他组件（auth、log）的异常 JSON 格式——**以本模块为唯一 HTTP 错误体标准**。
 

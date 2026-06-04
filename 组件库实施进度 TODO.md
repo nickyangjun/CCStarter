@@ -1,6 +1,6 @@
 # 组件库实施进度 TODO
 
-> **最后更新**：2026-06-04 | **当前阶段**：P2 common-auth Phase 3 已实现（本地 `mvn verify` ✅）
+> **最后更新**：2026-06-04 | **当前阶段**：P1 + P2 **可发布**（SNAPSHOT）
 
 ---
 
@@ -10,7 +10,7 @@
 |------|------|------|
 | P0 | 工程骨架 | ✅ 已完成 |
 | P1 | common-exception | ✅ **可发布**（1.0.0-SNAPSHOT） |
-| **P2** | common-auth | 🟡 Phase 3 已实现，待提交/发布 |
+| **P2** | common-auth | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | P3～P6 | log / file / dict / sms | ⬜ 未开始 |
 
 ---
@@ -47,14 +47,22 @@
 - [x] 单测 `AuthAutoConfigurationTests`、`JwtServiceTest` + sample `AuthIntegrationTest`
 - [x] 与 exception 401/403 JSON 联调（`ApiErrorResponseHttpWriter` + 映射扩展）
 
-### 4.2 待办
+### 4.2 发布清单（可发布）
 
-- [x] git commit + push（`8ff50de`）
-- [ ] 标可发布、私服 `deploy`、业务项目首次接入
+- [x] 功能：JWT 签发/校验、无状态 Security 链、白名单、条件装配、SPI
+- [x] 与 exception 401/403 统一 JSON
+- [x] 单测 + sample `AuthIntegrationTest`
+- [x] CI：`mvn verify`（含 auth 模块）
+- [x] BOM / parent 已登记；文档与根 README 接入说明
+- [x] git commit + push（`8ff50de` / `e4d0e5e`）
+- [ ] 私服 RELEASE 发布（按团队 Maven 流程执行 `deploy`）
+- [ ] 真实业务项目首次接入回归（可选）
+
+**发布坐标**：`com.company.component:common-auth-spring-boot-starter:1.0.0-SNAPSHOT`（**建议与 exception starter 一并引入**）
 
 | 模块 | 阶段 0 | 骨架 | 实现 | 发布 |
 |------|--------|------|------|------|
-| common-auth | ✅ | ✅ | ✅ | ⬜ |
+| common-auth | ✅ | ✅ | ✅ | ✅ SNAPSHOT |
 
 ---
 
@@ -65,6 +73,7 @@
 | 2026-06-04 | P1 提交 + CI | 可发布 SNAPSHOT |
 | 2026-06-04 | P2 auth 阶段 0 + POM 骨架 | 待 Phase 3 编码 |
 | 2026-06-04 | P2 Phase 3 JWT + Security + 全量 verify | 本地构建通过 |
+| 2026-06-04 | P2 标可发布 + 业务接入文档 | SNAPSHOT 可引用 |
 
 ---
 

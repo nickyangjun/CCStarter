@@ -5,7 +5,9 @@
 | 配置前缀 | `component.auth` |
 | Maven starter | `common-auth-spring-boot-starter` |
 | 设计文档 | [design.md](./design.md) |
+| **业务接入** | **[integration.md](./integration.md)** |
 | 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) |
+| 发布状态 | **可发布**（1.0.0-SNAPSHOT，需与 exception 一并引入） |
 
 ---
 
@@ -47,6 +49,17 @@
 |------|------|
 | `test` / `prod` | `jwt-secret` 必须由环境变量或配置中心注入，如 `${JWT_SECRET}` |
 | 所有环境 | `expose` 类配置遵循建设指南 §5.6；**禁止**在 prod yml 写死密钥 |
+
+---
+
+## 业务接入（摘要）
+
+1. 依赖：`common-exception-spring-boot-starter` + `common-auth-spring-boot-starter`（import BOM）。
+2. 配置：`component.auth.enabled=true`，`jwt-secret` 用 `${JWT_SECRET}` 注入。
+3. 登录：业务 Controller 注入 `JwtService#createToken`，组件不提供登录页。
+4. 白名单：登录、健康检查、静态公开 API 等写入 `whitelist`。
+
+完整步骤见 **[integration.md](./integration.md)**。
 
 ---
 

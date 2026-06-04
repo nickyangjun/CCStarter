@@ -5,7 +5,7 @@
 | 项 | 说明 |
 |----|------|
 | 技术基线 | Spring Boot **3.2.x**、Java **17+** |
-| 当前阶段 | **P1 可发布**；**P2 common-auth** 阶段 0 + 骨架（见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
+| 当前阶段 | **P1 + P2 可发布**（SNAPSHOT，见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
 | 规范文档 | [Spring Boot 可插拔积木组件建设指南](./Spring Boot 可插拔积木组件建设指南.md)（v2.1，**实施标准，勿当进度板修改**） |
 
 ---
@@ -23,7 +23,7 @@ CCStarter/
 ├── CHANGELOG.md
 ├── common-exception-autoconfigure/
 ├── common-exception-spring-boot-starter/
-├── common-auth-autoconfigure/       # P2 骨架（实现进行中）
+├── common-auth-autoconfigure/       # P2 JWT + Security
 ├── common-auth-spring-boot-starter/
 └── …                              # P3+：log / file 等
 ```
@@ -90,10 +90,15 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
         <groupId>com.company.component</groupId>
         <artifactId>common-exception-spring-boot-starter</artifactId>
     </dependency>
+    <!-- 鉴权：建议与 exception 一并引入，401/403 走统一 JSON -->
+    <dependency>
+        <groupId>com.company.component</groupId>
+        <artifactId>common-auth-spring-boot-starter</artifactId>
+    </dependency>
 </dependencies>
 ```
 
-Maven 坐标与接入细节见建设指南 **第十四节**。
+Maven 坐标与接入细节见建设指南 **第十四节**；鉴权详见 [docs/features/auth/integration.md](./docs/features/auth/integration.md)。
 
 ### 2. 基础配置（各环境共用）
 
@@ -106,7 +111,16 @@ component:
     include-path: true
     expose-stack-trace: false
     default-error-code: INTERNAL_ERROR
+  auth:
+    enabled: true
+    jwt-secret: ${JWT_SECRET}
+    expire-minutes: 120
+    whitelist:
+      - /actuator/**
+      - /api/public/**
 ```
+
+登录接口由业务实现，注入 `JwtService` 签发 Token（组件不提供登录页）。完整说明见 [auth 业务接入](./docs/features/auth/integration.md)。
 
 ### 3. 多环境（测试 / 正式 / 本地）
 
@@ -135,7 +149,7 @@ src/main/resources/
 └── application-docker.yml    # 本地 Docker（可选）
 ```
 
-示例（`common-exception`）：
+示例（`common-exception` + `common-auth`）：
 
 ```yaml
 # application-test.yml / application-prod.yml
@@ -143,6 +157,9 @@ component:
   exception:
     enabled: true
     expose-stack-trace: false
+  auth:
+    enabled: true
+    jwt-secret: ${JWT_SECRET}
 ```
 
 完整约定与配置中心说明见建设指南 **[§5.6 多环境配置](./Spring Boot 可插拔积木组件建设指南.md)**；样例见 `company-component-samples/sample-boot-app/src/main/resources/application-*.yml`。
@@ -158,6 +175,7 @@ component:
 | [docs/README.md](./docs/README.md) | 文档中心阅读顺序 |
 | [docs/architecture/team-decisions.md](./docs/architecture/team-decisions.md) | 团队锁定决策 |
 | [docs/guides/getting-started.md](./docs/guides/getting-started.md) | 克隆、构建、发布 |
+| [auth 业务接入](./docs/features/auth/integration.md) | JWT、白名单、登录集成 |
 
 ---
 
@@ -167,7 +185,7 @@ component:
 |------|------|------|
 | P0 | 父工程、BOM、docs、Docker、sample | ✅ 已完成 |
 | P1 | common-exception | ✅ 可发布（SNAPSHOT） |
-| P2 | common-auth | 🟡 阶段 0 + 骨架 |
+| P2 | common-auth | ✅ 可发布（SNAPSHOT，需配 exception） |
 | P3～P6 | log / file / dict / sms | 未开始 |
 
 明细以 [组件库实施进度 TODO](./组件库实施进度%20TODO.md) 为准。
