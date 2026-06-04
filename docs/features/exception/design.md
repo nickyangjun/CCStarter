@@ -55,6 +55,7 @@ com.company.component.exception.autoconfigure.ExceptionAutoConfiguration
   "message": "参数校验失败",
   "timestamp": "2026-06-04T10:00:00+08:00",
   "path": "/api/demo",
+  "traceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "errors": [
     { "field": "name", "message": "must not be blank" }
   ]
@@ -69,6 +70,7 @@ com.company.component.exception.autoconfigure.ExceptionAutoConfiguration
 | `path` | 可配置关闭 | 来自 `component.exception.include-path` |
 | `errors` | 校验类异常 | 字段级错误列表 |
 | `stackTrace` | 仅 `expose-stack-trace=true` | 生产禁止开启 |
+| `traceId` | **P3 起必填**（4xx/5xx） | 与 MDC `tid` 一致，见 [logging.md](../../architecture/logging.md)、[log/design.md](../log/design.md) §8 |
 
 ## 5. 异常映射（一期）
 

@@ -13,7 +13,7 @@
 
 | 目录 | 内容 |
 |------|------|
-| `architecture/` | 团队决策、配置前缀注册表、日志 MDC 约定等 |
+| `architecture/` | 团队决策、配置前缀注册表、[日志 MDC 约定](./architecture/logging.md) |
 | `guides/` | 操作指南 |
-| `features/{feature}/` | [exception](./features/exception/)、[auth](./features/auth/)（含 [接入指南](./features/auth/integration.md)）等 |
+| `features/{feature}/` | [exception](./features/exception/)、[auth](./features/auth/)、[log](./features/log/) 等 |
 | `adr/` | 架构决策记录（重大变更时新增） |

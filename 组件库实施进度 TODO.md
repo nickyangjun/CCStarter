@@ -1,6 +1,6 @@
 # 组件库实施进度 TODO
 
-> **最后更新**：2026-06-04 | **当前阶段**：P1 + P2 **可发布**（SNAPSHOT）
+> **最后更新**：2026-06-04 | **当前阶段**：P1 + P2 可发布；**P3 common-log 阶段 0 ✅**
 
 ---
 
@@ -11,7 +11,8 @@
 | P0 | 工程骨架 | ✅ 已完成 |
 | P1 | common-exception | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | **P2** | common-auth | ✅ **可发布**（1.0.0-SNAPSHOT） |
-| P3～P6 | log / file / dict / sms | ⬜ 未开始 |
+| **P3** | common-log | 🟡 阶段 0 ✅，待编码 |
+| P4～P6 | file / dict / sms | ⬜ 未开始 |
 
 ---
 
@@ -66,6 +67,30 @@
 
 ---
 
+## 五、P3：common-log
+
+### 5.0 阶段 0
+
+- [x] `docs/features/log/README.md`、`design.md`、`phase0-checklist.md`
+- [x] `docs/architecture/logging.md`（TraceId / MDC `tid` / SkyWalking）
+- [x] 团队决策：网关 `X-Trace-Id` 透传、请求日志仅 SLF4J、操作日志 SPI 异步、错误体必带 traceId
+- [x] TraceId 仅链路追踪（无业务语义）；`tid` 与 `userId` 分 MDC、日志分列打印
+
+### 5.1 待实现（按 design 分期）
+
+- [ ] Maven：`common-log-autoconfigure`、`common-log-spring-boot-starter`
+- [ ] `TraceIdFilter` + MDC `tid`（禁止有头时重建）
+- [ ] `RequestLoggingFilter`（仅 SLF4J）
+- [ ] **exception** 协作：`ApiErrorResponse.traceId`（读 MDC）
+- [ ] `@OperationLog` + `OperationLogRecorder` SPI
+- [ ] sample 集成 + `mvn verify`
+
+| 模块 | 阶段 0 | 骨架 | 实现 | 发布 |
+|------|--------|------|------|------|
+| common-log | ✅ | ⬜ | ⬜ | ⬜ |
+
+---
+
 ## 七、进度日志
 
 | 日期 | 动作 | 结果 |
@@ -74,10 +99,13 @@
 | 2026-06-04 | P2 auth 阶段 0 + POM 骨架 | 待 Phase 3 编码 |
 | 2026-06-04 | P2 Phase 3 JWT + Security + 全量 verify | 本地构建通过 |
 | 2026-06-04 | P2 标可发布 + 业务接入文档 | SNAPSHOT 可引用 |
+| 2026-06-04 | P3 log 阶段 0 + logging.md | 五项决策固化 |
 
 ---
 
 ## 八、快速链接
 
+- [log 设计](./docs/features/log/design.md)
+- [MDC 约定](./docs/architecture/logging.md)
 - [auth 设计](./docs/features/auth/design.md)
 - [exception 模块](./docs/features/exception/)

@@ -186,7 +186,8 @@ component:
 | P0 | 父工程、BOM、docs、Docker、sample | ✅ 已完成 |
 | P1 | common-exception | ✅ 可发布（SNAPSHOT） |
 | P2 | common-auth | ✅ 可发布（SNAPSHOT，需配 exception） |
-| P3～P6 | log / file / dict / sms | 未开始 |
+| P3 | common-log | 阶段 0 ✅，实现待开始 |
+| P4～P6 | file / dict / sms | 未开始 |
 
 明细以 [组件库实施进度 TODO](./组件库实施进度%20TODO.md) 为准。
 
