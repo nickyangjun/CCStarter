@@ -27,6 +27,7 @@ public final class ApiErrorResponseHttpWriter {
         body.setMessage(message);
         body.setTimestamp(OffsetDateTime.now());
         body.setPath(path);
+        TraceIdMdcSupport.applyTraceId(body, true);
         write(response, httpStatus, body);
     }
 

@@ -24,6 +24,7 @@ class ExceptionIntegrationTest {
                 .andExpect(jsonPath("$.code").value("INTERNAL_ERROR"))
                 .andExpect(jsonPath("$.message").value("sample runtime error"))
                 .andExpect(jsonPath("$.path").value("/api/sample/error/runtime"))
+                .andExpect(jsonPath("$.traceId").exists())
                 .andExpect(jsonPath("$.timestamp").exists());
     }
 

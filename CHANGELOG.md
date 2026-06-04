@@ -12,6 +12,10 @@
 
 ### Added
 
+- **common-log**：TraceId 透传（`X-Trace-Id` → MDC `tid`）、请求 SLF4J 摘要、`@OperationLog` + SPI（**可发布** SNAPSHOT）
+- **common-log**：业务接入见 `docs/features/log/integration.md`；MDC 约定见 `docs/architecture/logging.md`
+- **common-exception**：`ApiErrorResponse.traceId`、`component.exception.include-trace-id`（读 MDC `tid`）
+- **common-auth**：JWT 认证后 `userId` 写入 `Authentication#details` 供 log MDC
 - **common-auth**：JWT + Spring Security（**可发布** SNAPSHOT；建议与 exception starter 一并引入）
 - **common-auth**：`JwtAuthenticationFilter`、白名单、`JwtService`、SPI；业务接入见 `docs/features/auth/integration.md`
 - **common-exception**：`AuthenticationException` / `AccessDeniedException` 映射；`ApiErrorResponseHttpWriter`

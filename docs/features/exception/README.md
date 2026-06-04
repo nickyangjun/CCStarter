@@ -36,6 +36,7 @@
 | `include-path` | boolean | `true` | 否 | 响应是否带请求路径 |
 | `expose-stack-trace` | boolean | `false` | 否 | 是否返回堆栈（**生产必须 false**） |
 | `default-error-code` | string | `INTERNAL_ERROR` | 否 | 未识别异常兜底码 |
+| `include-trace-id` | boolean | `true` | 否 | 4xx/5xx 是否带 `traceId`（读 MDC `tid`，需配合 common-log） |
 
 完整说明见 [design.md](./design.md)。
 

@@ -5,6 +5,7 @@ import com.company.component.exception.spi.ExceptionErrorCodeResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,9 +28,11 @@ class ExceptionMappingSupportTest {
 
     @BeforeEach
     void setUp() {
+        MDC.clear();
         properties = new ExceptionProperties();
         properties.setEnabled(true);
         properties.setIncludePath(true);
+        properties.setIncludeTraceId(true);
         properties.setDefaultErrorCode("INTERNAL_ERROR");
         support = new ExceptionMappingSupport(properties);
         request = new MockHttpServletRequest("GET", "/api/test");
@@ -80,6 +83,17 @@ class ExceptionMappingSupportTest {
         MappedError mapped = support.resolve(new BadCredentialsException("bad creds"), request, List.of());
         assertThat(mapped.httpStatus()).isEqualTo(401);
         assertThat(mapped.body().getCode()).isEqualTo("UNAUTHORIZED");
+    }
+
+    @Test
+    void mapsWithTraceIdFromMdc() {
+        MDC.put("tid", "test-trace-99");
+        try {
+            MappedError mapped = support.resolve(new RuntimeException("x"), request, List.of());
+            assertThat(mapped.body().getTraceId()).isEqualTo("test-trace-99");
+        } finally {
+            MDC.remove("tid");
+        }
     }
 
     @Test

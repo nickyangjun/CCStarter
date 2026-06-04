@@ -31,3 +31,13 @@ component:
       - /api/sample/ping
       - /api/sample/error/**
       - /api/sample/auth/login
+  log:
+    enabled: true
+    trace:
+      allow-local-generate: true
+      response-header: true
+    request:
+      enabled: true
+      log-level: DEBUG
+      exclude-paths:
+        - /actuator/**

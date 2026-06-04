@@ -13,6 +13,7 @@ public class ApiErrorResponse {
     private String message;
     private OffsetDateTime timestamp;
     private String path;
+    private String traceId;
     private List<FieldError> errors = Collections.emptyList();
     private String stackTrace;
 
@@ -46,6 +47,14 @@ public class ApiErrorResponse {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 
     public List<FieldError> getErrors() {

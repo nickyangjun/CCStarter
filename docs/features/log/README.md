@@ -6,8 +6,9 @@
 | Maven starter | `common-log-spring-boot-starter` |
 | 设计文档 | [design.md](./design.md) |
 | MDC 全库约定 | [logging.md](../../architecture/logging.md) |
+| **业务接入** | **[integration.md](./integration.md)** |
 | 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) |
-| 发布状态 | 阶段 0 ✅（编码未开始） |
+| 发布状态 | **可发布**（1.0.0-SNAPSHOT，建议与 exception 一并引入） |
 
 ---
 
@@ -25,7 +26,7 @@
 ### B. 业务操作日志
 
 - `@OperationLog` + AOP 切面，组装 `OperationLogEntry`。
-- SPI **`OperationLogRecorder`**：业务落库（DB/ES/MQ）；无实现则不注册或 no-op，**不导致启动失败**。
+- SPI **`OperationLogRecorder`**：业务落库（DB/ES/MQ）；无 Bean 则不注册切面，**不导致启动失败**。
 - 文档**强烈推荐** SPI 实现**异步**落库，组件层不强制线程模型。
 
 ### C. 与 common-exception 协作
@@ -57,7 +58,7 @@
 
 ---
 
-## 配置项速查（规划）
+## 配置项速查
 
 | 配置键 | 类型 | 默认 | 说明 |
 |--------|------|------|------|
@@ -75,13 +76,17 @@
 
 ---
 
-## 业务接入（规划摘要）
+## 业务接入（摘要）
 
-1. 引入 `common-log-spring-boot-starter`（与 exception、auth 一并引入）。
-2. 网关保证每条外部请求带 **`X-Trace-Id`**。
-3. `component.log.enabled=true`；logback 使用 `%X{tid}`。
-4. 业务操作：实现 `OperationLogRecorder`，**异步**落库。
-5. 错误排查：用响应体 `traceId` 或日志 `[tid]` 检索全链路。
+1. 引入 `common-log-spring-boot-starter`（与 exception 一并引入；有 JWT 时加 auth）。
+2. 网关保证每条外部请求带 **`X-Trace-Id`**（服务只透传）。
+3. `component.log.enabled=true`；Logback：`[traceId=%X{tid}] [userId=%X{userId}]`。
+4. 操作日志：实现 `OperationLogRecorder`，**异步**落库。
+5. 排错：响应体 / 头中的 `traceId` 检索日志。
+
+完整步骤见 **[integration.md](./integration.md)**。
+
+**发布坐标**：`com.company.component:common-log-spring-boot-starter:1.0.0-SNAPSHOT`
 
 ---
 

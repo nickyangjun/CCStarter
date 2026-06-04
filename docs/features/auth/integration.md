@@ -1,6 +1,6 @@
 # common-auth · 业务接入指南
 
-> 一期 SNAPSHOT 可发布。鉴权与统一错误体**配套使用**：请同时引入 `common-exception-spring-boot-starter` 与 `common-auth-spring-boot-starter`。
+> 一期 SNAPSHOT 可发布。鉴权与统一错误体**配套使用**：请同时引入 `common-exception-spring-boot-starter` 与 `common-auth-spring-boot-starter`；链路 `traceId` 建议再加 [common-log](../log/integration.md)。
 
 ---
 

@@ -1,0 +1,2 @@
+com.company.component.log.autoconfigure.LogAutoConfiguration
+com.company.component.log.autoconfigure.LogWebAutoConfiguration

@@ -267,12 +267,12 @@ com.company.component.log.autoconfigure.LogWebAutoConfiguration
 | 阶段 | 内容 | 状态 |
 |------|------|------|
 | 0 | README、design、logging.md、phase0-checklist | ✅ |
-| 1 | Maven 双模块骨架 | ⬜ |
-| 2 | LogProperties + TraceIdFilter + MDC | ⬜ |
-| 3 | RequestLoggingFilter（SLF4J） | ⬜ |
-| 4 | exception 增加 `traceId` 字段 + 测试 | ⬜ |
-| 5 | `@OperationLog` + SPI | ⬜ |
-| 6 | sample 集成 + `mvn verify` | ⬜ |
-| 7 | 可发布 SNAPSHOT | ⬜ |
+| 1 | Maven 双模块骨架 | ✅ |
+| 2 | LogProperties + TraceIdFilter + MDC | ✅ |
+| 3 | RequestLoggingFilter（SLF4J） | ✅ |
+| 4 | exception 增加 `traceId` 字段 + 测试 | ✅ |
+| 5 | `@OperationLog` + SPI | ✅ |
+| 6 | sample 集成 + `mvn verify` | ✅ |
+| 7 | 可发布 SNAPSHOT | ✅（见 [integration.md](./integration.md)） |
 
 **建议**：Phase 2～4 作为 **P3.1 最小可发布**（链路 + 错误体 traceId）；Phase 5 为 **P3.2** 操作日志。

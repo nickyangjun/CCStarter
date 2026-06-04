@@ -2,6 +2,7 @@ package com.company.component.exception.core;
 
 import com.company.component.exception.properties.ExceptionProperties;
 import com.company.component.exception.spi.ExceptionErrorCodeResolver;
+import com.company.component.exception.support.TraceIdMdcSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -95,6 +96,7 @@ public class ExceptionMappingSupport {
         if (properties.isIncludePath() && request != null) {
             body.setPath(request.getRequestURI());
         }
+        TraceIdMdcSupport.applyTraceId(body, properties.isIncludeTraceId());
         return new MappedError(status, body);
     }
 
@@ -108,6 +110,7 @@ public class ExceptionMappingSupport {
         if (properties.isExposeStackTrace() && body.getStackTrace() == null) {
             body.setStackTrace(stackTraceOf(ex));
         }
+        TraceIdMdcSupport.applyTraceId(body, properties.isIncludeTraceId());
         return body;
     }
 

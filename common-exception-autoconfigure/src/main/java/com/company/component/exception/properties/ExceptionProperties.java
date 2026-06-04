@@ -30,6 +30,11 @@ public class ExceptionProperties {
      */
     private String defaultErrorCode = "INTERNAL_ERROR";
 
+    /**
+     * 是否在错误响应中包含 traceId（来自 MDC {@code tid}）。
+     */
+    private boolean includeTraceId = true;
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -60,5 +65,13 @@ public class ExceptionProperties {
 
     public void setDefaultErrorCode(String defaultErrorCode) {
         this.defaultErrorCode = defaultErrorCode;
+    }
+
+    public boolean isIncludeTraceId() {
+        return includeTraceId;
+    }
+
+    public void setIncludeTraceId(boolean includeTraceId) {
+        this.includeTraceId = includeTraceId;
     }
 }

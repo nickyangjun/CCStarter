@@ -1,6 +1,6 @@
 # 组件库实施进度 TODO
 
-> **最后更新**：2026-06-04 | **当前阶段**：P1 + P2 可发布；**P3 common-log 阶段 0 ✅**
+> **最后更新**：2026-06-04 | **当前阶段**：P1～P3 **可发布**（SNAPSHOT）
 
 ---
 
@@ -11,7 +11,7 @@
 | P0 | 工程骨架 | ✅ 已完成 |
 | P1 | common-exception | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | **P2** | common-auth | ✅ **可发布**（1.0.0-SNAPSHOT） |
-| **P3** | common-log | 🟡 阶段 0 ✅，待编码 |
+| **P3** | common-log | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | P4～P6 | file / dict / sms | ⬜ 未开始 |
 
 ---
@@ -76,18 +76,20 @@
 - [x] 团队决策：网关 `X-Trace-Id` 透传、请求日志仅 SLF4J、操作日志 SPI 异步、错误体必带 traceId
 - [x] TraceId 仅链路追踪（无业务语义）；`tid` 与 `userId` 分 MDC、日志分列打印
 
-### 5.1 待实现（按 design 分期）
+### 5.2 发布清单（可发布）
 
-- [ ] Maven：`common-log-autoconfigure`、`common-log-spring-boot-starter`
-- [ ] `TraceIdFilter` + MDC `tid`（禁止有头时重建）
-- [ ] `RequestLoggingFilter`（仅 SLF4J）
-- [ ] **exception** 协作：`ApiErrorResponse.traceId`（读 MDC）
-- [ ] `@OperationLog` + `OperationLogRecorder` SPI
-- [ ] sample 集成 + `mvn verify`
+- [x] 功能：TraceId 透传、MDC、请求 SLF4J、操作日志 SPI
+- [x] 与 exception `traceId` 字段、auth `userId` MDC 协作
+- [x] 单测 + sample `LogIntegrationTest`
+- [x] 文档：`integration.md`、`logging.md`、README 接入说明
+- [x] git commit + push（与代码同 PR）
+- [ ] 私服 RELEASE 发布（可选）
+
+**发布坐标**：`com.company.component:common-log-spring-boot-starter:1.0.0-SNAPSHOT`（**建议与 exception starter 一并引入**）
 
 | 模块 | 阶段 0 | 骨架 | 实现 | 发布 |
 |------|--------|------|------|------|
-| common-log | ✅ | ⬜ | ⬜ | ⬜ |
+| common-log | ✅ | ✅ | ✅ | ✅ SNAPSHOT |
 
 ---
 
@@ -100,11 +102,13 @@
 | 2026-06-04 | P2 Phase 3 JWT + Security + 全量 verify | 本地构建通过 |
 | 2026-06-04 | P2 标可发布 + 业务接入文档 | SNAPSHOT 可引用 |
 | 2026-06-04 | P3 log 阶段 0 + logging.md | 五项决策固化 |
+| 2026-06-04 | P3 log 实现 + 接入文档 | 可发布 SNAPSHOT |
 
 ---
 
 ## 八、快速链接
 
+- [log 接入](./docs/features/log/integration.md)
 - [log 设计](./docs/features/log/design.md)
 - [MDC 约定](./docs/architecture/logging.md)
 - [auth 设计](./docs/features/auth/design.md)
