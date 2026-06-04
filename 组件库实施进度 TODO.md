@@ -49,7 +49,7 @@
 
 ### 4.2 待办
 
-- [ ] git commit + push
+- [x] git commit + push（`8ff50de`）
 - [ ] 标可发布、私服 `deploy`、业务项目首次接入
 
 | 模块 | 阶段 0 | 骨架 | 实现 | 发布 |
