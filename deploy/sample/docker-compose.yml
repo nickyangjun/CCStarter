@@ -1,0 +1,11 @@
+services:
+  sample-boot-app:
+    image: ccstarter/sample-boot-app:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "18080:18080"
+    environment:
+      JAVA_OPTS: "-Dlogging.level.com.company.component.log.request=DEBUG"
+      JWT_SECRET: "01234567890123456789012345678901234567890123456789012"

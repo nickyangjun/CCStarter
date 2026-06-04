@@ -42,20 +42,22 @@ CCStarter/
 - Maven **3.9+**
 - （可选）Docker，用于 `docker` profile 联调中间件
 
-### 构建
+### 构建与冒烟
 
 ```bash
-# 在仓库根目录
-mvn clean verify
-mvn clean install   # 安装到本地 ~/.m2，供其他项目引用
+chmod +x scripts/*.sh scripts/lib/common.sh
+./scripts/smoke-test.sh   # 一键：verify + 启动 + 测试（CI / 提交前）
+./scripts/build.sh        # 仅 mvn verify + 打 JAR
 ```
 
-### 运行样例应用
+### 运行与测试样例（分两终端）
 
 ```bash
-cd company-component-samples/sample-boot-app
-mvn spring-boot:run
+./scripts/run-sample.sh   # 终端 1：仅启动
+./scripts/test-sample.sh  # 终端 2：仅 HTTP 冒烟（可重复执行）
 ```
+
+脚本说明：[scripts/README.md](./scripts/README.md)
 
 使用 Docker 中间件时（先启动 compose，见 [docs/guides/docker.md](./docs/guides/docker.md)）：
 

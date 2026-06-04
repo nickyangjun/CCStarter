@@ -16,6 +16,10 @@ management:
       exposure:
         include: health,info
 
+logging:
+  level:
+    com.company.component.log.request: DEBUG
+
 component:
   exception:
     enabled: true

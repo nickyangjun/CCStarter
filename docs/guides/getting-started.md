@@ -10,31 +10,57 @@ cd CCStarter
 - JDK **17+**：`java -version`
 - Maven **3.9+**：`mvn -version`
 
-## 2. 全量构建
+## 2. 全量构建与冒烟（推荐）
 
 在仓库根目录：
 
 ```bash
-mvn clean verify
-mvn clean install
+chmod +x scripts/*.sh scripts/lib/common.sh
+./scripts/smoke-test.sh
+```
+
+等价于：`mvn verify` + 打包 sample + 自动启动并校验 **exception / auth / log** 核心 HTTP 流程。  
+脚本说明见 [scripts/README.md](../../scripts/README.md)。
+
+仅编译（与 CI 一致）：
+
+```bash
+./scripts/build.sh
 ```
 
 ## 3. 运行样例应用
+
+```bash
+./scripts/run-sample.sh
+```
+
+或：
 
 ```bash
 cd company-component-samples/sample-boot-app
 mvn spring-boot:run
 ```
 
+应用已启动时，另开终端只跑测试：
+
+```bash
+./scripts/test-sample.sh
+```
+
 验证：访问 `http://localhost:18080/api/sample/ping`，应返回 `status=ok`。
 
 Actuator：`http://localhost:18080/actuator/health`
 
-启用 `common-exception` 后（sample 默认已开启），可验证：
+启用组件后（sample 默认已开启），冒烟脚本会自动验证：
 
-- `GET http://localhost:18080/api/sample/error/runtime` → 500 + 统一 JSON
-- `GET http://localhost:18080/api/sample/error/missing-param` → 400
-- `GET http://localhost:18080/api/sample/not-exists` → 404
+- ping / 登录 / JWT 受保护接口
+- 401、500、404 响应体 `traceId`
+- 请求日志中的 `traceId`、`userId`
+
+手动抽查示例：
+
+- `GET http://localhost:18080/api/sample/error/runtime` → 500 + 统一 JSON + `traceId`
+- `GET http://localhost:18080/api/sample/auth/login` → 返回 `token`
 
 ### 按环境启动（test / prod / docker）
 
@@ -58,6 +84,14 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
 ```
 
 详见 [docker.md](./docker.md)。
+
+## 4.1 Docker 部署 sample（可选）
+
+```bash
+./scripts/deploy-sample-docker.sh
+```
+
+构建 JAR → 镜像 `ccstarter/sample-boot-app:local` → 启动容器 → 自动冒烟。
 
 ## 5. 业务项目引用（P1+ 模块发布后）
 

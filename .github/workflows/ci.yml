@@ -21,3 +21,8 @@ jobs:
 
       - name: Build with tests
         run: mvn -B clean verify
+
+      - name: E2E smoke test (sample-boot-app)
+        run: |
+          chmod +x scripts/*.sh scripts/lib/common.sh
+          BUILD_FIRST=0 ./scripts/smoke-test.sh
