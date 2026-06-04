@@ -4,7 +4,7 @@
 
 | 模块 | 前缀 | 负责人 | 状态 | 设计文档 |
 |------|------|--------|------|----------|
-| auth | `component.auth` | — | 待建设 | `docs/features/auth/` |
+| auth | `component.auth` | — | 阶段0✅ / 实现中 | `docs/features/auth/` |
 | log | `component.log` | — | 待建设 | `docs/features/log/` |
 | file | `component.file` | — | 待建设 | `docs/features/file/` |
 | exception | `component.exception` | — | 已实现 | `docs/features/exception/` |

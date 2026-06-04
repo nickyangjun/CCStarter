@@ -16,6 +16,8 @@
         <module>company-component-bom</module>
         <module>common-exception-autoconfigure</module>
         <module>common-exception-spring-boot-starter</module>
+        <module>common-auth-autoconfigure</module>
+        <module>common-auth-spring-boot-starter</module>
         <module>company-component-samples</module>
     </modules>
 
@@ -29,6 +31,7 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
+        <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -50,6 +53,31 @@
                 <groupId>com.company.component</groupId>
                 <artifactId>common-exception-spring-boot-starter</artifactId>
                 <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-auth-autoconfigure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-auth-spring-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

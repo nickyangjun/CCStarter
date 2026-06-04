@@ -5,7 +5,7 @@
 | 项 | 说明 |
 |----|------|
 | 技术基线 | Spring Boot **3.2.x**、Java **17+** |
-| 当前阶段 | **P1 common-exception** 已完成 → 下一步 **P2 common-auth**（见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
+| 当前阶段 | **P1 可发布**；**P2 common-auth** 阶段 0 + 骨架（见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
 | 规范文档 | [Spring Boot 可插拔积木组件建设指南](./Spring Boot 可插拔积木组件建设指南.md)（v2.1，**实施标准，勿当进度板修改**） |
 
 ---
@@ -23,7 +23,9 @@ CCStarter/
 ├── CHANGELOG.md
 ├── common-exception-autoconfigure/
 ├── common-exception-spring-boot-starter/
-└── …                              # P2+：auth / log / file 等
+├── common-auth-autoconfigure/       # P2 骨架（实现进行中）
+├── common-auth-spring-boot-starter/
+└── …                              # P3+：log / file 等
 ```
 
 每个业务能力（鉴权、日志、异常等）在 P1 之后按 **autoconfigure + starter** 双模块追加，详见建设指南第二节。
@@ -164,8 +166,8 @@ component:
 | 阶段 | 内容 | 状态 |
 |------|------|------|
 | P0 | 父工程、BOM、docs、Docker、sample | ✅ 已完成 |
-| P1 | common-exception | ✅ 已完成 |
-| P2 | common-auth | 未开始 |
+| P1 | common-exception | ✅ 可发布（SNAPSHOT） |
+| P2 | common-auth | 🟡 阶段 0 + 骨架 |
 | P3～P6 | log / file / dict / sms | 未开始 |
 
 明细以 [组件库实施进度 TODO](./组件库实施进度%20TODO.md) 为准。
