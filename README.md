@@ -1,0 +1,125 @@
+# CCStarter · 公司通用 Spring Boot 组件库
+
+可插拔、可配置的 **Spring Boot Starter 积木组件**  monorepo。业务项目通过 **BOM + starter 依赖 + `component.*` 配置** 接入，无需复制粘贴通用能力代码。
+
+| 项 | 说明 |
+|----|------|
+| 技术基线 | Spring Boot **3.2.x**、Java **17+** |
+| 当前阶段 | **P0 已完成** → 下一步 **P1 common-exception**（见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
+| 规范文档 | [Spring Boot 可插拔积木组件建设指南](./Spring Boot 可插拔积木组件建设指南.md)（v2.1，**实施标准，勿当进度板修改**） |
+
+---
+
+## 仓库结构
+
+```
+CCStarter/
+├── pom.xml                          # 父工程 company-component-parent
+├── company-component-bom/           # 对外 BOM，统一依赖版本
+├── company-component-samples/
+│   └── sample-boot-app/             # 集成验证样例
+├── docs/                            # 设计文档、指南、架构决策
+├── deploy/docker/                   # 本地 / CI 中间件（Docker Compose）
+├── CHANGELOG.md
+└── …                              # P1+ 起：common-*-autoconfigure / *-starter
+```
+
+每个业务能力（鉴权、日志、异常等）在 P1 之后按 **autoconfigure + starter** 双模块追加，详见建设指南第二节。
+
+---
+
+## 快速开始
+
+### 环境要求
+
+- JDK **17+**
+- Maven **3.9+**
+- （可选）Docker，用于 `docker` profile 联调中间件
+
+### 构建
+
+```bash
+# 在仓库根目录
+mvn clean verify
+mvn clean install   # 安装到本地 ~/.m2，供其他项目引用
+```
+
+### 运行样例应用
+
+```bash
+cd company-component-samples/sample-boot-app
+mvn spring-boot:run
+```
+
+使用 Docker 中间件时（先启动 compose，见 [docs/guides/docker.md](./docs/guides/docker.md)）：
+
+```bash
+cd deploy/docker && docker compose up -d
+cd company-component-samples/sample-boot-app
+mvn spring-boot:run -Dspring-boot.run.profiles=docker
+```
+
+---
+
+## 业务项目如何接入（P1+ 模块发布后）
+
+1. 在业务 `pom.xml` 中 **import** `company-component-bom`。
+2. 声明所需 `common-*-spring-boot-starter` 依赖（**不要**直接依赖 autoconfigure）。
+3. 在 `application.yml` 中配置 `component.{feature}.enabled=true` 及必填项。
+
+示例（占位坐标，与 BOM 版本一致）：
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.company.component</groupId>
+            <artifactId>company-component-bom</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+详细约定见建设指南 **第十四节**。
+
+---
+
+## 文档索引
+
+| 文档 | 用途 |
+|------|------|
+| [建设指南 v2.1](./Spring Boot 可插拔积木组件建设指南.md) | 架构、规范、检查清单定义 |
+| [实施进度 TODO](./组件库实施进度 TODO.md) | **进度勾选、阻塞、日志** |
+| [docs/README.md](./docs/README.md) | 文档中心阅读顺序 |
+| [docs/architecture/team-decisions.md](./docs/architecture/team-decisions.md) | 团队锁定决策 |
+| [docs/guides/getting-started.md](./docs/guides/getting-started.md) | 克隆、构建、发布 |
+
+---
+
+## 路线图（摘要）
+
+| 阶段 | 内容 | 状态 |
+|------|------|------|
+| P0 | 父工程、BOM、docs、Docker、sample | ✅ 已完成 |
+| P1 | common-exception | 未开始 |
+| P2 | common-auth | 未开始 |
+| P3～P6 | log / file / dict / sms | 未开始 |
+
+明细以 [组件库实施进度 TODO](./组件库实施进度%20TODO.md) 为准。
+
+---
+
+## 参与贡献
+
+1. 规范变更 → 评审后更新 **建设指南** 与 CHANGELOG。  
+2. 日常进度 → 只更新 **实施进度 TODO** 与 `docs/features/{feature}/`。  
+3. 新模块 → 先完成建设指南 **阶段 0 + 附录 C**，再提交代码。
+
+---
+
+## License
+
+内部项目；`groupId` 占位为 `com.company.component`，实施时请在 `docs/architecture/team-decisions.md` 替换为正式坐标。

@@ -1,0 +1,6 @@
+# Local development with deploy/docker/docker-compose.yml (profile: docker)
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379
