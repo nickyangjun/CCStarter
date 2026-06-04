@@ -8,7 +8,10 @@
 
 ### Added
 
-- P2：`common-auth` 阶段 0 文档与 Maven 模块骨架（无 Java 实现）
+- P2：**common-auth** Phase 3 — JWT（jjwt 0.12.6）、`JwtAuthenticationFilter`、`SecurityFilterChain`、白名单、`AuthAutoConfiguration` 条件装配
+- P2：与 **common-exception** 联调 401/403 统一 JSON（`ApiErrorResponseHttpWriter`、Security 异常映射）
+- P2：sample `AuthIntegrationTest`；`AuthAutoConfigurationTests` / `JwtServiceTest`
+- P2：`common-auth` 阶段 0 文档与 Maven 模块骨架
 - CI：GitHub Actions `mvn verify`
 
 ## [1.0.0-SNAPSHOT] - 2026-06-04

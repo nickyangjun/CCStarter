@@ -1,0 +1,2 @@
+com.company.component.auth.autoconfigure.AuthAutoConfiguration
+com.company.component.auth.autoconfigure.AuthSecurityAutoConfiguration

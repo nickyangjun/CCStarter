@@ -22,3 +22,12 @@ component:
     include-path: true
     expose-stack-trace: false
     default-error-code: INTERNAL_ERROR
+  auth:
+    enabled: true
+    jwt-secret: ${JWT_SECRET:01234567890123456789012345678901234567890123456789012}
+    expire-minutes: 120
+    whitelist:
+      - /actuator/**
+      - /api/sample/ping
+      - /api/sample/error/**
+      - /api/sample/auth/login

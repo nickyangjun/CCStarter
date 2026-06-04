@@ -11,6 +11,8 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -29,6 +31,8 @@ public class ExceptionMappingSupport {
     private static final String CODE_BAD_REQUEST = "BAD_REQUEST";
     private static final String CODE_NOT_FOUND = "NOT_FOUND";
     private static final String CODE_METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED";
+    private static final String CODE_UNAUTHORIZED = "UNAUTHORIZED";
+    private static final String CODE_FORBIDDEN = "FORBIDDEN";
 
     private final ExceptionProperties properties;
 
@@ -68,6 +72,13 @@ public class ExceptionMappingSupport {
         }
         if (ex instanceof NoHandlerFoundException notFound) {
             return build(404, CODE_NOT_FOUND, "资源不存在: " + notFound.getRequestURL(), request, Collections.emptyList());
+        }
+        if (ex instanceof AccessDeniedException) {
+            return build(403, CODE_FORBIDDEN, "无访问权限", request, Collections.emptyList());
+        }
+        if (ex instanceof AuthenticationException auth) {
+            String message = auth.getMessage() != null ? auth.getMessage() : "未认证或认证已失效";
+            return build(401, CODE_UNAUTHORIZED, message, request, Collections.emptyList());
         }
         String code = properties.getDefaultErrorCode() != null ? properties.getDefaultErrorCode() : "INTERNAL_ERROR";
         String message = ex.getMessage() != null ? ex.getMessage() : "服务器内部错误";
@@ -118,6 +129,12 @@ public class ExceptionMappingSupport {
         }
         if (ex instanceof NoHandlerFoundException) {
             return 404;
+        }
+        if (ex instanceof AccessDeniedException) {
+            return 403;
+        }
+        if (ex instanceof AuthenticationException) {
+            return 401;
         }
         return 500;
     }

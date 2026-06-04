@@ -37,7 +37,8 @@ class ExceptionIntegrationTest {
 
     @Test
     void notFoundReturnsUnifiedJson() throws Exception {
-        mockMvc.perform(get("/api/sample/not-exists"))
+        // 走白名单 /api/sample/error/**，避免被 auth 拦截为 401
+        mockMvc.perform(get("/api/sample/error/not-exists"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("NOT_FOUND"));
     }

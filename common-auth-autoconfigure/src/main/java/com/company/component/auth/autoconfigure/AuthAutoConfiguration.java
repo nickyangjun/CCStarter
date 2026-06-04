@@ -1,0 +1,38 @@
+package com.company.component.auth.autoconfigure;
+
+import com.company.component.auth.core.JwtService;
+import com.company.component.auth.properties.AuthProperties;
+import com.company.component.auth.spi.JwtClaimsCustomizer;
+import com.company.component.auth.support.AuthPathMatcher;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+
+import java.util.List;
+
+@AutoConfiguration
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(name = "io.jsonwebtoken.Jwts")
+@EnableConfigurationProperties(AuthProperties.class)
+@ConditionalOnProperty(prefix = "component.auth", name = "enabled", havingValue = "true", matchIfMissing = false)
+public class AuthAutoConfiguration {
+
+    @Bean(name = "componentAuthPathMatcher")
+    @ConditionalOnMissingBean(AuthPathMatcher.class)
+    public AuthPathMatcher componentAuthPathMatcher(AuthProperties properties) {
+        return new AuthPathMatcher(properties.getWhitelist());
+    }
+
+    @Bean(name = "componentJwtService")
+    @ConditionalOnMissingBean(JwtService.class)
+    public JwtService componentJwtService(AuthProperties properties,
+                                          ObjectProvider<JwtClaimsCustomizer> customizerProvider) {
+        List<JwtClaimsCustomizer> customizers = customizerProvider.orderedStream().toList();
+        return new JwtService(properties, customizers);
+    }
+}

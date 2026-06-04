@@ -162,8 +162,8 @@ com.company.component.auth.autoconfigure.AuthSecurityAutoConfiguration
 |------|------|------|
 | 0 | 本文档 + phase0-checklist | ✅ |
 | 1 | Maven 双模块骨架 | ✅ |
-| 2 | AuthProperties + 元数据 | 待做 |
-| 3 | JwtService + Filter + Security 链 | 待做 |
-| 4 | 自动配置 + imports | 待做 |
-| 5 | 单测 + sample | 待做 |
+| 2 | AuthProperties + 元数据 | ✅ |
+| 3 | JwtService + Filter + Security 链 | ✅（白名单 `AntPathRequestMatcher`，避免切片测试依赖 MVC introspector） |
+| 4 | 自动配置 + imports | ✅ |
+| 5 | 单测 + sample | ✅ |
 | 6～7 | 发布 | 待做 |

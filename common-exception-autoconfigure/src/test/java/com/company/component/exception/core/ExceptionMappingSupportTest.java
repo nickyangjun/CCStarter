@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
@@ -71,6 +73,20 @@ class ExceptionMappingSupportTest {
         assertThat(mapped.body().getCode()).isEqualTo("BIZ_001");
         assertThat(mapped.body().getMessage()).isEqualTo("业务错误");
         assertThat(mapped.body().getTimestamp()).isNotNull();
+    }
+
+    @Test
+    void mapsAuthenticationExceptionTo401() {
+        MappedError mapped = support.resolve(new BadCredentialsException("bad creds"), request, List.of());
+        assertThat(mapped.httpStatus()).isEqualTo(401);
+        assertThat(mapped.body().getCode()).isEqualTo("UNAUTHORIZED");
+    }
+
+    @Test
+    void mapsAccessDeniedTo403() {
+        MappedError mapped = support.resolve(new AccessDeniedException("denied"), request, List.of());
+        assertThat(mapped.httpStatus()).isEqualTo(403);
+        assertThat(mapped.body().getCode()).isEqualTo("FORBIDDEN");
     }
 
     @Test
