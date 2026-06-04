@@ -1,0 +1,6 @@
+# 正式环境 Profile 示例：spring.profiles.active=prod
+
+component:
+  exception:
+    enabled: true
+    expose-stack-trace: false   # 生产禁止暴露堆栈

@@ -14,6 +14,8 @@
 
     <modules>
         <module>company-component-bom</module>
+        <module>common-exception-autoconfigure</module>
+        <module>common-exception-spring-boot-starter</module>
         <module>company-component-samples</module>
     </modules>
 
@@ -37,6 +39,17 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- 内部模块版本（与 ${revision} 同步；对外发布见 company-component-bom） -->
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-exception-autoconfigure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-exception-spring-boot-starter</artifactId>
+                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

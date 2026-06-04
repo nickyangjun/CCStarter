@@ -15,5 +15,5 @@
 |------|------|
 | `architecture/` | 团队决策、配置前缀注册表、日志 MDC 约定等 |
 | `guides/` | 操作指南 |
-| `features/{feature}/` | 各能力设计、流程图（P1+ 按模块创建） |
+| `features/{feature}/` | 各能力设计、流程图（[exception](./features/exception/) 已就绪） |
 | `adr/` | 架构决策记录（重大变更时新增） |

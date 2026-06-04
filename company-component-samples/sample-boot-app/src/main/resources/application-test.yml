@@ -1,0 +1,7 @@
+# 测试环境 Profile 示例：spring.profiles.active=test
+# 与 prod 保持同一套 component.exception 行为，避免测试/生产表现不一致
+
+component:
+  exception:
+    enabled: true
+    expose-stack-trace: false

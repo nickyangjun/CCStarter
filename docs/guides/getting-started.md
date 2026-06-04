@@ -30,6 +30,23 @@ mvn spring-boot:run
 
 Actuator：`http://localhost:18080/actuator/health`
 
+启用 `common-exception` 后（sample 默认已开启），可验证：
+
+- `GET http://localhost:18080/api/sample/error/runtime` → 500 + 统一 JSON
+- `GET http://localhost:18080/api/sample/error/missing-param` → 400
+- `GET http://localhost:18080/api/sample/not-exists` → 404
+
+### 按环境启动（test / prod / docker）
+
+`component.*` 与 Spring Boot 一样，用 Profile 区分测试/正式，见建设指南 **§5.6**。
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=test
+# 或 -Dspring-boot.run.profiles=prod
+```
+
+对应文件：`application-test.yml`、`application-prod.yml`。
+
 ## 4. 使用 Docker 中间件（可选）
 
 ```bash

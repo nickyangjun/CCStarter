@@ -268,15 +268,87 @@ public class AuthAutoConfiguration {
 | 改默认值 | 视为行为变更，CHANGELOG 标明；可能升 MINOR 或 MAJOR |
 | 删除配置项 | 仅 MAJOR |
 
-### 5.6 环境差异（dev / test / prod / docker）
+### 5.6 多环境配置（测试 / 正式 / 本地）
 
-| Profile | 用途 |
-|---------|------|
-| `default` | 本地无 Docker 时的可选配置（**仅允许非敏感**默认值） |
-| `docker` | 连接 compose 中间件，本地开发专用 |
-| `prod` | 仅通过环境变量 / 配置中心注入密钥；**禁止**弱密钥默认值与测试配置混入 |
+**结论**：支持。组件配置项（`component.*`）与 Spring Boot 自带配置一样，通过 **Profile + 多份 yml + 环境变量/配置中心** 区分环境；**不需要**在组件 Java 代码里写 `if (test) … else (prod) …`。
 
-组件库代码**不**读取 `spring.profiles.active` 做分支逻辑；差异全部由业务 `application-*.yml` 与 `component.*` 完成。
+#### 5.6.1 机制说明
+
+| 层级 | 谁负责 | 说明 |
+|------|--------|------|
+| 组件库 | 只定义 `component.{feature}.*` 绑定项 | 如 `component.exception.enabled` |
+| 业务项目 | 按环境提供不同配置值 | `application.yml` + `application-{profile}.yml` 或 Nacos/Apollo 按环境隔离 |
+| 组件库代码 | **禁止**读取 `spring.profiles.active` 分支 | 环境差异仅在业务侧配置文件中体现（见 5.6.3） |
+
+激活环境（业务项目）：
+
+```bash
+# 启动时指定
+java -jar app.jar --spring.profiles.active=prod
+
+# 或环境变量
+export SPRING_PROFILES_ACTIVE=test
+```
+
+#### 5.6.2 推荐 Profile 约定（业务项目）
+
+| Profile | 典型用途 | `component.*` 注意点 |
+|---------|----------|----------------------|
+| `default` / `dev` | 本地开发 | 可 `expose-stack-trace: true`（仅本机）；**禁止**提交真实密钥 |
+| `test` | 测试环境部署 | 与 prod 结构一致，可用独立配置中心 namespace；堆栈默认 **false** |
+| `prod` | 正式环境 | 密钥走环境变量/配置中心；`expose-stack-trace` **必须 false** |
+| `docker` | 本地 Docker 中间件 | 只覆盖数据源/Redis 等**基础设施**地址，不替代 `component.*` 行为配置 |
+
+#### 5.6.3 配置示例（以 common-exception 为例）
+
+`application.yml`（各环境共用默认值）：
+
+```yaml
+component:
+  exception:
+    enabled: true
+    include-path: true
+    expose-stack-trace: false
+    default-error-code: INTERNAL_ERROR
+```
+
+`application-test.yml`：
+
+```yaml
+# 测试环境：可与 prod 对齐，便于提前发现配置问题
+component:
+  exception:
+    enabled: true
+    expose-stack-trace: false
+```
+
+`application-prod.yml`：
+
+```yaml
+component:
+  exception:
+    enabled: true
+    expose-stack-trace: false   # 强制关闭，禁止返回堆栈
+```
+
+敏感项或需按环境覆盖时，使用占位符（**推荐**）：
+
+```yaml
+component:
+  auth:
+    jwt-secret: ${JWT_SECRET}   # 由 test/prod 不同环境变量注入
+```
+
+#### 5.6.4 与配置中心的关系
+
+- 测试、正式若在 **Nacos / Apollo** 分 namespace 或 dataId，只需写入同一批 `component.*` 键，**键名全库一致**。
+- 组件库发布的 jar **不包含** `application-prod.yml`；环境文件只存在于**业务项目**或配置中心。
+
+#### 5.6.5 文档要求
+
+- 建设指南（本节）：约定机制与 Profile 规范。  
+- 各能力 `docs/features/{feature}/README.md`：列出该模块在各环境的**推荐配置差异**（如 exception 的 `expose-stack-trace`）。  
+- 样例工程：建议提供 `application-test.yml` / `application-prod.yml` **片段或占位**，便于复制（见 `sample-boot-app`）。
 
 ---
 

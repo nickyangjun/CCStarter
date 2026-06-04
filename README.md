@@ -5,7 +5,7 @@
 | 项 | 说明 |
 |----|------|
 | 技术基线 | Spring Boot **3.2.x**、Java **17+** |
-| 当前阶段 | **P0 已完成** → 下一步 **P1 common-exception**（见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
+| 当前阶段 | **P1 common-exception** 已完成 → 下一步 **P2 common-auth**（见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
 | 规范文档 | [Spring Boot 可插拔积木组件建设指南](./Spring Boot 可插拔积木组件建设指南.md)（v2.1，**实施标准，勿当进度板修改**） |
 
 ---
@@ -21,7 +21,9 @@ CCStarter/
 ├── docs/                            # 设计文档、指南、架构决策
 ├── deploy/docker/                   # 本地 / CI 中间件（Docker Compose）
 ├── CHANGELOG.md
-└── …                              # P1+ 起：common-*-autoconfigure / *-starter
+├── common-exception-autoconfigure/
+├── common-exception-spring-boot-starter/
+└── …                              # P2+：auth / log / file 等
 ```
 
 每个业务能力（鉴权、日志、异常等）在 P1 之后按 **autoconfigure + starter** 双模块追加，详见建设指南第二节。
@@ -61,13 +63,12 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
 
 ---
 
-## 业务项目如何接入（P1+ 模块发布后）
+## 业务项目如何接入
+
+### 1. 依赖（BOM + starter）
 
 1. 在业务 `pom.xml` 中 **import** `company-component-bom`。
-2. 声明所需 `common-*-spring-boot-starter` 依赖（**不要**直接依赖 autoconfigure）。
-3. 在 `application.yml` 中配置 `component.{feature}.enabled=true` 及必填项。
-
-示例（占位坐标，与 BOM 版本一致）：
+2. 声明所需 `common-*-spring-boot-starter`（**不要**直接依赖 autoconfigure）。
 
 ```xml
 <dependencyManagement>
@@ -81,9 +82,68 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
         </dependency>
     </dependencies>
 </dependencyManagement>
+
+<dependencies>
+    <dependency>
+        <groupId>com.company.component</groupId>
+        <artifactId>common-exception-spring-boot-starter</artifactId>
+    </dependency>
+</dependencies>
 ```
 
-详细约定见建设指南 **第十四节**。
+Maven 坐标与接入细节见建设指南 **第十四节**。
+
+### 2. 基础配置（各环境共用）
+
+`component.*` 与 Spring Boot 原生配置相同，写在业务项目的 `application.yml`：
+
+```yaml
+component:
+  exception:
+    enabled: true
+    include-path: true
+    expose-stack-trace: false
+    default-error-code: INTERNAL_ERROR
+```
+
+### 3. 多环境（测试 / 正式 / 本地）
+
+**支持分环境配置**，无需改组件代码；通过 **Profile + `application-{profile}.yml`**（或 Nacos/Apollo 分 namespace）区分即可。
+
+| Profile | 用途 | 说明 |
+|---------|------|------|
+| `test` | 测试环境 | 行为宜与 prod 对齐；`expose-stack-trace` 保持 `false` |
+| `prod` | 正式环境 | 密钥用环境变量/配置中心；**禁止** `expose-stack-trace: true` |
+| `docker` | 本地中间件 | 只改 Redis/DB 等连接地址，不替代 `component.*` 行为 |
+
+激活环境：
+
+```bash
+java -jar app.jar --spring.profiles.active=prod
+# 或 export SPRING_PROFILES_ACTIVE=test
+```
+
+业务项目建议文件结构：
+
+```
+src/main/resources/
+├── application.yml           # 公共默认（component.* 主干）
+├── application-test.yml      # 测试环境覆盖项
+├── application-prod.yml      # 正式环境覆盖项
+└── application-docker.yml    # 本地 Docker（可选）
+```
+
+示例（`common-exception`）：
+
+```yaml
+# application-test.yml / application-prod.yml
+component:
+  exception:
+    enabled: true
+    expose-stack-trace: false
+```
+
+完整约定与配置中心说明见建设指南 **[§5.6 多环境配置](./Spring Boot 可插拔积木组件建设指南.md)**；样例见 `company-component-samples/sample-boot-app/src/main/resources/application-*.yml`。
 
 ---
 
@@ -104,7 +164,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
 | 阶段 | 内容 | 状态 |
 |------|------|------|
 | P0 | 父工程、BOM、docs、Docker、sample | ✅ 已完成 |
-| P1 | common-exception | 未开始 |
+| P1 | common-exception | ✅ 已完成 |
 | P2 | common-auth | 未开始 |
 | P3～P6 | log / file / dict / sms | 未开始 |
 

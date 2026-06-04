@@ -7,7 +7,7 @@
 | auth | `component.auth` | — | 待建设 | `docs/features/auth/` |
 | log | `component.log` | — | 待建设 | `docs/features/log/` |
 | file | `component.file` | — | 待建设 | `docs/features/file/` |
-| exception | `component.exception` | — | 待建设 | `docs/features/exception/` |
+| exception | `component.exception` | — | 已实现 | `docs/features/exception/` |
 | dict | `component.dict` | — | 待建设 | `docs/features/dict/` |
 | sms | `component.sms` | — | 待建设 | `docs/features/sms/` |
 

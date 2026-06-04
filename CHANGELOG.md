@@ -8,6 +8,10 @@
 
 ### Added
 
+- P1：`common-exception` 阶段 0 文档（`docs/features/exception/`）
+- P1：`common-exception-autoconfigure` / `common-exception-spring-boot-starter` 模块骨架
+- P1：`ExceptionProperties`、条件装配单测、SPI 接口草案
+- P1 Phase 3：`ComponentGlobalExceptionHandler`、内置异常映射、sample 集成测试
 - P0：父工程 `company-component-parent`、`company-component-bom`
 - P0：`company-component-samples/sample-boot-app` 样例应用
 - P0：`docs/`、`deploy/docker/` 骨架

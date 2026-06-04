@@ -1,6 +1,11 @@
 spring:
   application:
     name: sample-boot-app
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 server:
   port: 18080
@@ -11,5 +16,9 @@ management:
       exposure:
         include: health,info
 
-# P1+ component.* configuration will be added here when starters are available
-component: {}
+component:
+  exception:
+    enabled: true
+    include-path: true
+    expose-stack-trace: false
+    default-error-code: INTERNAL_ERROR
