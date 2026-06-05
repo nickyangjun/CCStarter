@@ -30,6 +30,8 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 
 等价于 `build.sh` + 后台启动 + `test-sample.sh` + 自动停止。
 
+`run-sample.sh` / `smoke-test.sh` 默认 `--spring.profiles.active=test`，加载 `application-test.yml` 中的登录测试验证码（固定码 `123456`）。
+
 ## 环境变量
 
 | 变量 | 默认 | 说明 |

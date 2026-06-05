@@ -18,8 +18,8 @@ docker compose up -d
 
 ## 与 Spring 配置
 
-- Profile：`docker`
-- 文件：`sample-boot-app` 的 `application-docker.yml`
+- Profile：`docker`（`application-docker.yml` 内 `spring.profiles.include: test`，登录测试码与 `application-test.yml` 相同）
+- 文件：`sample-boot-app` 的 `application-docker.yml` + `application-test.yml`
 - 主机名使用 compose **service 名称**（如 `redis`），不要用 `localhost`
 
 组件行为仍由 `component.*` 配置，Docker 只提供基础设施连通性。

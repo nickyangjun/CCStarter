@@ -7,3 +7,4 @@ component:
   auth:
     enabled: true
     jwt-secret: ${JWT_SECRET}   # 正式环境由运维/配置中心注入
+    # 禁止配置 login.test.*（测试验证码仅允许 application-test.yml + profile=test）

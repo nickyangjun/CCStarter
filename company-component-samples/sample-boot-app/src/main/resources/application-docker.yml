@@ -1,5 +1,9 @@
-# Local development with deploy/docker/docker-compose.yml (profile: docker)
+# 本地 Docker 联调：--spring.profiles.active=docker（见 deploy/sample/docker-compose.yml）
+# 自动激活 test profile，登录/注册测试验证码与 application-test.yml 一致（固定码 123456）
+
 spring:
+  profiles:
+    include: test # 自动加载 application-test.yml
   data:
     redis:
       host: redis

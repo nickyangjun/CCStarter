@@ -1,5 +1,5 @@
-# 测试环境 Profile 示例：spring.profiles.active=test
-# 与 prod 保持同一套 component.exception 行为，避免测试/生产表现不一致
+# 测试环境 Profile：启动加 --spring.profiles.active=test
+# 本地 run-sample / smoke-test 脚本已默认激活；mvn test 见 src/test/resources/application.properties
 
 component:
   exception:
@@ -8,5 +8,16 @@ component:
   auth:
     enabled: true
     jwt-secret: ${JWT_SECRET:01234567890123456789012345678901234567890123456789012}
+    login:
+      test:
+        # 生产防呆：test.sms / test.email 任一 enabled=true 时，此项必须为 true，否则启动失败
+        # 含义是「确认当前环境有意使用测试验证码」，不是鼓励在生产开测试码
+        allow-in-production: true
+        sms:
+          enabled: true
+          fixed-code: "123456"   # 任意手机号可用该码登录，不发真实短信
+        email:
+          enabled: true
+          fixed-code: "123456"   # 任意邮箱可用该码登录，不发真实邮件
   log:
     enabled: true

@@ -37,6 +37,7 @@ start_sample_background() {
   JAR="$(find_sample_jar)"
   log_info "后台启动 sample: ${JAR}"
   java -jar "${JAR}" \
+    --spring.profiles.active=test \
     --server.port="${PORT}" \
     --logging.level.com.company.component.log.request=DEBUG \
     >>"${SMOKE_LOG}" 2>&1 &

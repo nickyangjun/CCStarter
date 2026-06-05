@@ -49,17 +49,7 @@ component:
       register:
         enabled: true
         login-as-register: true
-      test:
-        # 生产防呆：下面 test.sms / test.email 任一 enabled=true 时，此项必须为 true，否则应用启动失败。
-        # 含义是「确认当前环境有意使用测试验证码」，不是鼓励在生产开测试码。
-        # sample 仅用于本地演示，正式 prod 禁止配置 test.sms / test.email。
-        allow-in-production: true
-        sms:
-          enabled: true
-          fixed-code: "123456"   # 任意手机号可用该码登录，不发真实短信
-        email:
-          enabled: true
-          fixed-code: "123456"   # 任意邮箱可用该码登录，不发真实邮件
+      # 测试验证码（fixed-code 等）仅写在 application-test.yml，启动时 --spring.profiles.active=test
   log:
     enabled: true
     trace:
