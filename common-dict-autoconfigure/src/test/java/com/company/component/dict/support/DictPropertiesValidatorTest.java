@@ -25,6 +25,16 @@ class DictPropertiesValidatorTest {
     }
 
     @Test
+    void invalidApiBasePathFails() {
+        DictProperties properties = new DictProperties();
+        properties.getApi().setEnabled(true);
+        properties.getApi().setBasePath("api/dict");
+        assertThatThrownBy(() -> DictPropertiesValidator.validate(properties))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("base-path");
+    }
+
+    @Test
     void nonPositiveTtlFails() {
         DictProperties properties = new DictProperties();
         properties.getCache().setTtlSeconds(0);

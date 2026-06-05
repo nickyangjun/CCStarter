@@ -71,6 +71,26 @@ json_field() {
   fi
 }
 
+# 读取 JSON 数组元素字段，如 json_array_field "$body" items 0 label
+json_array_field() {
+  local json="$1"
+  local array_name="$2"
+  local index="$3"
+  local field="$4"
+  if command -v jq >/dev/null 2>&1; then
+    echo "$json" | jq -r ".${array_name}[${index}].${field} // empty"
+  else
+    echo "$json" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+arr = d.get('${array_name}', [])
+idx = int('${index}')
+field = '${field}'
+print(arr[idx].get(field, '') if isinstance(arr, list) and len(arr) > idx else '')
+"
+  fi
+}
+
 assert_http_status() {
   local expected="$1"
   local actual="$2"

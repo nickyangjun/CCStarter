@@ -21,6 +21,11 @@
             <artifactId>common-exception-autoconfigure</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.company.component</groupId>
+            <artifactId>common-dict-autoconfigure</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>

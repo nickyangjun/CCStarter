@@ -6,6 +6,8 @@ import com.company.component.auth.login.support.LoginPathCollector;
 import com.company.component.auth.properties.AuthProperties;
 import com.company.component.auth.spi.JwtClaimsCustomizer;
 import com.company.component.auth.support.AuthPathMatcher;
+import com.company.component.dict.properties.DictProperties;
+import com.company.component.dict.support.DictPathCollector;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -27,9 +29,15 @@ public class AuthAutoConfiguration {
 
     @Bean(name = "componentAuthPathMatcher")
     @ConditionalOnMissingBean(AuthPathMatcher.class)
-    public AuthPathMatcher componentAuthPathMatcher(AuthProperties properties, LoginProperties loginProperties) {
+    public AuthPathMatcher componentAuthPathMatcher(AuthProperties properties,
+                                                    LoginProperties loginProperties,
+                                                    ObjectProvider<DictProperties> dictPropertiesProvider) {
         List<String> merged = new ArrayList<>(properties.getWhitelist());
         merged.addAll(LoginPathCollector.collect(loginProperties));
+        DictProperties dictProperties = dictPropertiesProvider.getIfAvailable();
+        if (dictProperties != null) {
+            merged.addAll(DictPathCollector.collect(dictProperties));
+        }
         return new AuthPathMatcher(merged);
     }
 

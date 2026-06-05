@@ -115,8 +115,25 @@ run_smoke_cases() {
   assert_http_status "200" "$status" "POST orders"
   assert_eq "created" "$(json_field "$body" status)" "order status"
 
+  log_info "=== 9. 字典 API GET /api/dict/gender（白名单，无 Token）==="
+  log_api_request "GET" "/api/dict/gender" ""
+  body="$(curl -sS -w '\n%{http_code}' \
+    -H "X-Trace-Id: ${trace_id}" \
+    "${base_url}/api/dict/gender")"
+  status="${body##*$'\n'}"
+  body="${body%$'\n'*}"
+  if [[ "$status" == "401" && "$(json_field "$body" code)" == "UNAUTHORIZED" ]]; then
+    log_api_response "dict gender" "$status" "$body"
+    die "dict API 返回 401：/api/dict/** 未在白名单或 sample 为旧 JAR。请: ./scripts/build.sh && ./scripts/run-sample.sh"
+  fi
+  log_api_response "dict gender" "$status" "$body"
+  assert_http_status "200" "$status" "dict gender"
+  assert_eq "gender" "$(json_field "$body" dictType)" "dictType"
+  assert_eq "男" "$(json_array_field "$body" "items" 0 "label")" "gender label"
+  assert_eq "M" "$(json_array_field "$body" "items" 0 "value")" "gender value"
+
   if [[ "${SMOKE_LOG_CHECK:-0}" == "1" && -n "${smoke_log}" ]]; then
-    log_info "=== 9. 校验请求摘要日志（SLF4J DEBUG）==="
+    log_info "=== 10. 校验请求摘要日志（SLF4J DEBUG）==="
     sleep 2
     if [[ -f "${smoke_log}" && -s "${smoke_log}" ]]; then
       local log_content
@@ -128,7 +145,7 @@ run_smoke_cases() {
       log_warn "后台日志文件为空或未落盘，已跳过文件校验（HTTP 用例已通过）"
     fi
   else
-    log_info "=== 9. 跳过日志文件校验（使用 test-sample 时请查看 run-sample 终端）==="
+    log_info "=== 10. 跳过日志文件校验（使用 test-sample 时请查看 run-sample 终端）==="
   fi
 
   log_info "全部冒烟用例通过"

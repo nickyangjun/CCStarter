@@ -502,8 +502,8 @@ spring:
 | 2 | `DictDataProvider` SPI + `InMemoryDictCache` + `DictService` | ✅ |
 | 3 | `RedisDictCache` + `cache.type=redis` 分支 | ✅ |
 | 4 | 单测 + sample（`SampleDictSpiConfiguration`） | ✅ |
-| 5 | `integration.md` + BOM 登记 + CHANGELOG | 🟡 CHANGELOG 已记；integration 待补 |
-| **二期** | `DictController` + 白名单 + 冒烟用例 | ⬜ |
+| 5 | `integration.md` + BOM 登记 + CHANGELOG | ✅ |
+| 6 | `DictController` + auth 白名单合并 + 冒烟用例 | ✅ |
 
 **版本**：首个可发布建议 **`1.0.0-SNAPSHOT`**（新模块）；或随 BOM `${revision}` 统一版本，实现前在 BOM 登记。
 

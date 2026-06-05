@@ -51,7 +51,8 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 5. 无 Token → 401 + `traceId`  
 6. 500 / 404 + `traceId`  
 7. `POST /orders`  
-8. 后台启动时校验日志文件  
+8. `GET /api/dict/gender`（白名单，无 Token）  
+9. 后台启动时校验日志文件（仅 `smoke-test.sh`）  
 
 自定义网关 TraceId：`SMOKE_TRACE_ID=my-gateway-id ./scripts/test-sample.sh`
 

@@ -137,8 +137,8 @@
 - [x] SPI `DictDataProvider` + `DictService`
 - [x] `InMemoryDictCache` + `RedisDictCache`（`cache.type`）
 - [x] 单测 + sample `SampleDictSpiConfiguration` + `DictIntegrationTest`
-- [ ] `docs/features/dict/integration.md` + CHANGELOG
-- [ ] **二期**：`DictController` HTTP API + 冒烟
+- [x] `docs/features/dict/integration.md`
+- [x] `DictController` HTTP API + 冒烟 `GET /api/dict/gender`
 
 **发布坐标**（规划）：`com.company.component:common-dict-spring-boot-starter:1.0.0-SNAPSHOT`
 

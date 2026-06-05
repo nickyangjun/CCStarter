@@ -1,1 +1,2 @@
 com.company.component.dict.autoconfigure.DictAutoConfiguration
+com.company.component.dict.autoconfigure.DictWebAutoConfiguration

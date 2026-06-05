@@ -3,10 +3,11 @@
 | 项 | 内容 |
 |----|------|
 | 配置前缀 | `component.dict` |
-| Maven starter | `common-dict-spring-boot-starter`（规划） |
+| Maven starter | `common-dict-spring-boot-starter` |
 | 设计文档 | [design.md](./design.md) |
+| **业务接入** | **[integration.md](./integration.md)** |
 | 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) |
-| 发布状态 | **可发布**（1.0.0-SNAPSHOT；HTTP API 二期） |
+| 发布状态 | **可发布**（1.0.0-SNAPSHOT） |
 
 ---
 
@@ -16,11 +17,10 @@
 - **缓存层**：内存（默认 / sample 本地）或 **Redis**（`docker` profile / 生产多实例）。
 - SPI **`DictDataProvider`**：业务从统一表 **`sys_dict_type` / `sys_dict_item`** 加载数据。
 - 缓存失效：`refresh(dictType)` / `refreshAll()`（管理端改库后由业务调用）。
-- 与 **common-exception** 协作：字典类型不存在、SPI 失败等映射统一错误码。
+- **HTTP API**（可选）：`GET /api/dict/{dictType}`（`api.enabled=true`）。
+- 与 **common-exception** / **common-auth** 协作：错误码映射、白名单自动合并。
 
 ## 一期不做
-
-- **HTTP API**（`GET /api/dict/{type}` 等）——二期再加。
 - 字典管理后台、CRUD API、导入导出（业务系统）。
 - 树形字典、多语言 label、Jackson `@DictLabel` 自动翻译（二期）。
 - 独立 `common-redis` 模块（一期在 dict 内 optional Redis 缓存实现）。
@@ -33,7 +33,7 @@
 | # | 议题 | 结论 |
 |---|------|------|
 | 1 | 字典表规范 | 全团队统一 **`sys_dict_type` + `sys_dict_item`**（含 `dict_source`、`is_builtin`、`item_value`；见 [design.md §4](./design.md#4-统一字典表规范)） |
-| 2 | 一期对外形态 | **仅 `DictService` Bean**，不注册 Controller |
+| 2 | 对外形态 | **`DictService` Bean** + 可选 **`api.enabled`** 注册 `DictController` |
 | 3 | sample 缓存 | 默认 **`memory`**（`application.yml`） |
 | 4 | Docker 联调缓存 | **`docker` profile 使用 `redis`**（`application-docker.yml` + 已有 Redis compose） |
 | 5 | Redis 连接 | 仅用 **`spring.data.redis.*`**（基础设施）；`component.dict.cache.*` 管行为 |
@@ -52,8 +52,10 @@
 | `cache.ttl-seconds` | int | `3600` | 缓存 TTL（秒），> 0 |
 | `cache.key-prefix` | string | `${spring.application.name}:dict` | Redis key 命名空间 |
 | `cache.null-ttl-seconds` | int | `60` | 空结果防穿透短 TTL（可选） |
+| `api.enabled` | boolean | `false` | 注册 `GET {base-path}/{dictType}` |
+| `api.base-path` | string | `/api/dict` | HTTP 路径前缀 |
 
-完整说明见 [design.md](./design.md)。
+完整说明见 [design.md](./design.md) 与 [integration.md](./integration.md)。
 
 ---
 
@@ -65,7 +67,7 @@
 4. 业务 Controller / 导出 / 报表注入 **`DictService`** 做码表翻译。
 5. 管理端改字典后调用 **`dictService.refresh(dictType)`**。
 
-完整接入文档编码后补充 `integration.md`（二期，与 HTTP API 同步或提前）。
+完整步骤见 **[integration.md](./integration.md)**。
 
 ---
 

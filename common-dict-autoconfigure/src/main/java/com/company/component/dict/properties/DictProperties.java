@@ -9,6 +9,8 @@ public class DictProperties {
 
     private final Cache cache = new Cache();
 
+    private final Api api = new Api();
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -19,6 +21,33 @@ public class DictProperties {
 
     public Cache getCache() {
         return cache;
+    }
+
+    public Api getApi() {
+        return api;
+    }
+
+    public static class Api {
+
+        private boolean enabled = false;
+
+        private String basePath = "/api/dict";
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getBasePath() {
+            return basePath;
+        }
+
+        public void setBasePath(String basePath) {
+            this.basePath = basePath;
+        }
     }
 
     public static class Cache {

@@ -52,6 +52,8 @@ component:
       # 测试验证码（fixed-code 等）仅写在 application-test.yml，启动时 --spring.profiles.active=test
   dict:
     enabled: true
+    api:
+      enabled: true
     cache:
       type: memory
       key-prefix: "${spring.application.name:sample-boot-app}:dict"

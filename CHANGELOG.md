@@ -8,6 +8,7 @@
 
 ### Added
 
+- **common-dict**：`GET /api/dict/{dictType}`（`component.dict.api.enabled`）、auth 白名单自动合并
 - **common-dict**：`DictService`（`getItems` / `getLabel` / `getValue` / `refresh`）、`DictDataProvider` SPI
 - **common-dict**：内存 / Redis 缓存（`component.dict.cache.type`）；sample 默认 memory，`docker` profile redis
 - **common-dict**：`DictException` + `DICT_ENTRY_NOT_FOUND` / `DICT_LOAD_FAILED` 错误码映射

@@ -23,5 +23,12 @@ public final class DictPropertiesValidator {
         if (!StringUtils.hasText(cache.getKeyPrefix())) {
             throw new IllegalStateException("component.dict.cache.key-prefix must not be blank");
         }
+        if (properties.getApi().isEnabled()) {
+            String basePath = properties.getApi().getBasePath();
+            if (!StringUtils.hasText(basePath) || !basePath.startsWith("/")) {
+                throw new IllegalStateException(
+                        "component.dict.api.base-path must start with '/' when api.enabled=true");
+            }
+        }
     }
 }
