@@ -23,7 +23,7 @@ cp -f "${JAR}" "${STAGING}/app.jar"
 log_info "构建镜像 ${IMAGE_TAG}"
 docker build -t "${IMAGE_TAG}" "${ROOT_DIR}/deploy/sample"
 
-log_info "启动容器（docker compose，profile=docker，含 test 登录固定码）"
+log_info "启动容器（docker compose：MySQL + Redis + sample，profile=docker，含 test 登录固定码）"
 docker compose -f "${COMPOSE_FILE}" up -d --build
 
 PORT="${SMOKE_PORT:-18080}"

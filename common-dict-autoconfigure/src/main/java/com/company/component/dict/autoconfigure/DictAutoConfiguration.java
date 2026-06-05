@@ -23,7 +23,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-@AutoConfiguration
+@AutoConfiguration(after = org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class)
 @EnableConfigurationProperties(DictProperties.class)
 @ConditionalOnProperty(prefix = "component.dict", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class DictAutoConfiguration {

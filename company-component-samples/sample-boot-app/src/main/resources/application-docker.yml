@@ -2,14 +2,27 @@
 # 自动激活 test profile，登录/注册测试验证码与 application-test.yml 一致（固定码 123456）
 
 spring:
-  profiles:
-    include: test # 自动加载 application-test.yml
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/sample?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:sample}
+    password: ${SPRING_DATASOURCE_PASSWORD:sample}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: true
   data:
     redis:
-      host: redis
-      port: 6379
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
 
 component:
+  auth:
+    login:
+      redis:
+        enabled: true
+        key-prefix: "${spring.application.name:sample-boot-app}:login"
   dict:
+    enabled: true
+    api:
+      enabled: true
     cache:
       type: redis

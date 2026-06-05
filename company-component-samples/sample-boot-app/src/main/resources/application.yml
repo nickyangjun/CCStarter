@@ -1,6 +1,13 @@
 spring:
   application:
     name: sample-boot-app
+  datasource:
+    url: jdbc:h2:mem:sample_dict;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  flyway:
+    enabled: true
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -49,6 +56,8 @@ component:
       register:
         enabled: true
         login-as-register: true
+      redis:
+        enabled: false
       # 测试验证码（fixed-code 等）仅写在 application-test.yml，启动时 --spring.profiles.active=test
   dict:
     enabled: true

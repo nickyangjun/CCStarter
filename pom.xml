@@ -18,6 +18,8 @@
         <module>common-exception-spring-boot-starter</module>
         <module>common-auth-autoconfigure</module>
         <module>common-auth-spring-boot-starter</module>
+        <module>common-auth-login-redis-autoconfigure</module>
+        <module>common-auth-login-redis-spring-boot-starter</module>
         <module>common-log-autoconfigure</module>
         <module>common-log-spring-boot-starter</module>
         <module>common-dict-autoconfigure</module>
@@ -68,6 +70,16 @@
             <dependency>
                 <groupId>com.company.component</groupId>
                 <artifactId>common-auth-spring-boot-starter</artifactId>
+                <version>${auth.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-auth-login-redis-autoconfigure</artifactId>
+                <version>${auth.revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-auth-login-redis-spring-boot-starter</artifactId>
                 <version>${auth.revision}</version>
             </dependency>
             <dependency>

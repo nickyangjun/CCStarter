@@ -8,6 +8,20 @@
 
 ### Added
 
+- **common-auth-login-redis**（**1.1.0-SNAPSHOT**）：`RedisSmsCodeStore` / `RedisEmailCodeStore`；`component.auth.login.redis.enabled` / `key-prefix`
+- **common-auth-login-redis**：`common-auth-login-redis-autoconfigure` + `common-auth-login-redis-spring-boot-starter`；Testcontainers Redis 单测
+- **sample**：Flyway 迁移 `V1__sys_dict.sql` + `JdbcDictDataProvider`（替代内存 `SampleDictSpiConfiguration`）
+- **sample**：本地 H2 + Flyway；Docker MySQL + Redis 全栈（`deploy/sample/docker-compose.yml`）
+
+### Changed
+
+- **common-dict**：`DictAutoConfiguration` 在 `RedisAutoConfiguration` 之后加载，修复 `cache.type=redis` 时 `DictController` 未注册
+- **sample · docker**：`SPRING_PROFILES_ACTIVE=docker,test`（compose 激活，不再在 profile 文件内 `spring.profiles.include`）
+- **deploy/sample**：compose 增加 MySQL / Redis healthcheck；支持 `MYSQL_PORT` / `SAMPLE_HOST_PORT` 环境变量
+- **docs/guides/docker.md**：补充 sample 全栈部署说明
+
+### Added（common-dict，前序未发布）
+
 - **common-dict**：`GET /api/dict/{dictType}`（`component.dict.api.enabled`）、auth 白名单自动合并
 - **common-dict**：`DictService`（`getItems` / `getLabel` / `getValue` / `refresh`）、`DictDataProvider` SPI
 - **common-dict**：内存 / Redis 缓存（`component.dict.cache.type`）；sample 默认 memory，`docker` profile redis
