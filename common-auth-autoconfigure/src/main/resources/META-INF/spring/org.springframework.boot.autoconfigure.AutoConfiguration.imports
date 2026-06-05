@@ -1,2 +1,3 @@
 com.company.component.auth.autoconfigure.AuthAutoConfiguration
 com.company.component.auth.autoconfigure.AuthSecurityAutoConfiguration
+com.company.component.auth.login.autoconfigure.LoginAutoConfiguration

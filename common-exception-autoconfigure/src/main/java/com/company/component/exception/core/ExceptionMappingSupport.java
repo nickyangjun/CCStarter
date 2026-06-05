@@ -2,6 +2,7 @@ package com.company.component.exception.core;
 
 import com.company.component.exception.properties.ExceptionProperties;
 import com.company.component.exception.spi.ExceptionErrorCodeResolver;
+import com.company.component.exception.spi.MappedHttpStatusException;
 import com.company.component.exception.support.TraceIdMdcSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
@@ -122,6 +123,9 @@ public class ExceptionMappingSupport {
      * SPI 未指定状态时，按内置规则推断 HTTP 状态。
      */
     private int resolveHttpStatusForSpi(Throwable ex) {
+        if (ex instanceof MappedHttpStatusException mapped) {
+            return mapped.getHttpStatus();
+        }
         if (ex instanceof MethodArgumentNotValidException || ex instanceof BindException
                 || ex instanceof MissingServletRequestParameterException
                 || ex instanceof HttpMessageNotReadableException) {

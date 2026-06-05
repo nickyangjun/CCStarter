@@ -44,7 +44,7 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 
 1. **网关头透传**：脚本固定 `SMOKE_TRACE_ID`（默认 `smoke-trace-0001`），模拟网关  
 2. **无网关头自建**：不带 `X-Trace-Id`，断言响应头回写且每次请求生成**新** UUID  
-3. 登录 JWT  
+3. 短信登录 JWT（打印请求/响应；`accessToken` 脱敏）  
 4. 受保护接口 200  
 5. 无 Token → 401 + `traceId`  
 6. 500 / 404 + `traceId`  
@@ -54,3 +54,15 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 自定义网关 TraceId：`SMOKE_TRACE_ID=my-gateway-id ./scripts/test-sample.sh`
 
 依赖：`curl`、`python3`；可选 `jq`。
+
+## 登录用例失败（401 UNAUTHORIZED）
+
+若第 3 步返回 `code=UNAUTHORIZED`、`path=/api/auth/sms/login`，表示**登录 URL 未匿名放行**（常见原因：**18080 上仍是旧 sample 进程**）。
+
+```bash
+# 停掉旧进程后重新构建并启动
+./scripts/build.sh
+./scripts/run-sample.sh
+# 另开终端
+./scripts/test-sample.sh
+```

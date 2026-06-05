@@ -167,3 +167,4 @@ com.company.component.auth.autoconfigure.AuthSecurityAutoConfiguration
 | 4 | 自动配置 + imports | ✅ |
 | 5 | 单测 + sample | ✅ |
 | 6～7 | 发布 | ✅ SNAPSHOT 可发布（见 [integration.md](./integration.md)） |
+| **2.x login** | 登录编排（SMS、注册、测试码） | 阶段 0，见 [login-design.md](./login-design.md) |

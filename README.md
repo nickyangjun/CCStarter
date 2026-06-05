@@ -19,7 +19,15 @@ CCStarter/
 ├── company-component-samples/
 │   └── sample-boot-app/             # 集成验证样例
 ├── docs/                            # 设计文档、指南、架构决策
+├── scripts/                         # 构建、本地运行、冒烟测试、Docker 部署（见下文）
+│   ├── build.sh                     # mvn verify + 打 sample JAR
+│   ├── run-sample.sh                # 仅启动 sample（前台）
+│   ├── test-sample.sh               # 仅 HTTP 冒烟（需已启动）
+│   ├── smoke-test.sh                # 一键 build + 测 + 停（CI 同款）
+│   ├── deploy-sample-docker.sh      # sample Docker 部署 + 测试
+│   └── lib/                         # common.sh、smoke-cases.sh
 ├── deploy/docker/                   # 本地 / CI 中间件（Docker Compose）
+├── deploy/sample/                   # sample-boot-app 镜像与 compose
 ├── CHANGELOG.md
 ├── common-exception-autoconfigure/
 ├── common-exception-spring-boot-starter/
@@ -42,22 +50,85 @@ CCStarter/
 - Maven **3.9+**
 - （可选）Docker，用于 `docker` profile 联调中间件
 
-### 构建与冒烟
+首次使用请赋予执行权限：
 
 ```bash
-chmod +x scripts/*.sh scripts/lib/common.sh
-./scripts/smoke-test.sh   # 一键：verify + 启动 + 测试（CI / 提交前）
-./scripts/build.sh        # 仅 mvn verify + 打 JAR
+chmod +x scripts/*.sh scripts/lib/*.sh
 ```
 
-### 运行与测试样例（分两终端）
+### 脚本一览
+
+| 脚本 | 用途 |
+|------|------|
+| [scripts/build.sh](./scripts/build.sh) | `mvn clean verify` + 打包 `sample-boot-app` JAR |
+| [scripts/run-sample.sh](./scripts/run-sample.sh) | **仅启动** sample（前台，控制台可见 `[traceId=…] [userId=…]`） |
+| [scripts/test-sample.sh](./scripts/test-sample.sh) | **仅测试** HTTP 冒烟（要求 sample 已启动，可反复执行） |
+| [scripts/smoke-test.sh](./scripts/smoke-test.sh) | **一键全流程**：build → 后台启动 → test → 停进程（与 CI 一致） |
+| [scripts/deploy-sample-docker.sh](./scripts/deploy-sample-docker.sh) | 构建镜像并 `docker compose` 启动，再跑 `test-sample.sh` |
+
+公共库（勿直接执行）：`scripts/lib/common.sh`、`scripts/lib/smoke-cases.sh`。
+
+更细说明见 **[scripts/README.md](./scripts/README.md)**。
+
+### 推荐用法
+
+**提交前 / CI（一条命令）**
 
 ```bash
-./scripts/run-sample.sh   # 终端 1：仅启动
-./scripts/test-sample.sh  # 终端 2：仅 HTTP 冒烟（可重复执行）
+./scripts/smoke-test.sh
 ```
 
-脚本说明：[scripts/README.md](./scripts/README.md)
+**本地开发（两终端）**
+
+```bash
+# 终端 1
+./scripts/run-sample.sh
+
+# 终端 2（改代码并重启 run-sample 后可多次执行）
+./scripts/test-sample.sh
+```
+
+**仅编译（与 CI 单测一致）**
+
+```bash
+./scripts/build.sh
+```
+
+### 冒烟测试覆盖
+
+`test-sample.sh` / `smoke-test.sh` 会校验 exception、auth、log 核心流程：
+
+| # | 场景 |
+|---|------|
+| 1 | 带 `X-Trace-Id` 透传（默认 `smoke-trace-0001`，模拟网关） |
+| 2 | **无** `X-Trace-Id` 时服务自建 traceId（每次请求新 UUID） |
+| 3 | 登录获取 JWT |
+| 4 | 带 Token 访问受保护接口 |
+| 5 | 无 Token → 401 + 响应体 `traceId` |
+| 6 | 500 / 404 统一错误 JSON 含 `traceId` |
+| 7 | `POST /api/sample/orders` 操作日志链路 |
+| 8 | 后台启动时校验日志文件（仅 `smoke-test.sh`） |
+
+常用环境变量：
+
+| 变量 | 默认 | 说明 |
+|------|------|------|
+| `SMOKE_PORT` | `18080` | sample 端口 |
+| `SMOKE_TRACE_ID` | `smoke-trace-0001` | 模拟网关 TraceId（用例 1/3+） |
+| `BUILD_FIRST` | `1` | 是否先执行 `build.sh` |
+| `SMOKE_SKIP_START` | — | 仅 `smoke-test`；一般用 `test-sample` 代替已启动场景 |
+
+示例：`SMOKE_TRACE_ID=my-gateway-id ./scripts/test-sample.sh`
+
+### Docker
+
+**sample 应用镜像（组件联调）**
+
+```bash
+./scripts/deploy-sample-docker.sh
+```
+
+**中间件（Redis 等，可选）**
 
 使用 Docker 中间件时（先启动 compose，见 [docs/guides/docker.md](./docs/guides/docker.md)）：
 
@@ -192,6 +263,7 @@ component:
 | [docs/README.md](./docs/README.md) | 文档中心阅读顺序 |
 | [docs/architecture/team-decisions.md](./docs/architecture/team-decisions.md) | 团队锁定决策 |
 | [docs/guides/getting-started.md](./docs/guides/getting-started.md) | 克隆、构建、发布 |
+| [scripts/README.md](./scripts/README.md) | 构建 / 运行 / 冒烟 / 部署脚本 |
 | [auth 业务接入](./docs/features/auth/integration.md) | JWT、白名单、登录集成 |
 | [log 业务接入](./docs/features/log/integration.md) | TraceId、MDC、操作日志 SPI |
 | [MDC 约定](./docs/architecture/logging.md) | `tid` / SkyWalking / 与 userId 分离 |

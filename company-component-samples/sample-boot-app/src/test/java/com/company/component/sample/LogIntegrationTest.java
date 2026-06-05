@@ -60,12 +60,17 @@ class LogIntegrationTest {
 
     @Test
     void operationLogRecordedAfterLogin() throws Exception {
-        MvcResult loginResult = mockMvc.perform(get("/api/sample/auth/login")
-                        .header(TraceIdFilter.TRACE_ID_HEADER, GATEWAY_TRACE))
+        String loginBody = """
+                {"mobile":"13800138001","code":"123456"}
+                """;
+        MvcResult loginResult = mockMvc.perform(post("/api/auth/sms/login")
+                        .header(TraceIdFilter.TRACE_ID_HEADER, GATEWAY_TRACE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(loginBody))
                 .andExpect(status().isOk())
                 .andReturn();
         JsonNode json = new ObjectMapper().readTree(loginResult.getResponse().getContentAsString());
-        String token = json.get("token").asText();
+        String token = json.get("accessToken").asText();
 
         mockMvc.perform(post("/api/sample/orders")
                         .header(TraceIdFilter.TRACE_ID_HEADER, GATEWAY_TRACE)
@@ -76,6 +81,6 @@ class LogIntegrationTest {
         assertThat(operationLogConfiguration.getEntries()).hasSize(1);
         assertThat(operationLogConfiguration.getEntries().get(0).getTraceId()).isEqualTo(GATEWAY_TRACE);
         assertThat(operationLogConfiguration.getEntries().get(0).getModule()).isEqualTo("order");
-        assertThat(operationLogConfiguration.getEntries().get(0).getOperatorId()).isEqualTo("1");
+        assertThat(operationLogConfiguration.getEntries().get(0).getOperatorId()).isEqualTo("1001");
     }
 }

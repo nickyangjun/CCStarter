@@ -1,6 +1,8 @@
 package com.company.component.auth.autoconfigure;
 
 import com.company.component.auth.core.JwtService;
+import com.company.component.auth.login.properties.LoginProperties;
+import com.company.component.auth.login.support.LoginPathCollector;
 import com.company.component.auth.properties.AuthProperties;
 import com.company.component.auth.spi.JwtClaimsCustomizer;
 import com.company.component.auth.support.AuthPathMatcher;
@@ -13,19 +15,22 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass(name = "io.jsonwebtoken.Jwts")
-@EnableConfigurationProperties(AuthProperties.class)
+@EnableConfigurationProperties({AuthProperties.class, LoginProperties.class})
 @ConditionalOnProperty(prefix = "component.auth", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class AuthAutoConfiguration {
 
     @Bean(name = "componentAuthPathMatcher")
     @ConditionalOnMissingBean(AuthPathMatcher.class)
-    public AuthPathMatcher componentAuthPathMatcher(AuthProperties properties) {
-        return new AuthPathMatcher(properties.getWhitelist());
+    public AuthPathMatcher componentAuthPathMatcher(AuthProperties properties, LoginProperties loginProperties) {
+        List<String> merged = new ArrayList<>(properties.getWhitelist());
+        merged.addAll(LoginPathCollector.collect(loginProperties));
+        return new AuthPathMatcher(merged);
     }
 
     @Bean(name = "componentJwtService")

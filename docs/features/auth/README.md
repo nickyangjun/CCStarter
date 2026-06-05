@@ -4,9 +4,9 @@
 |----|------|
 | 配置前缀 | `component.auth` |
 | Maven starter | `common-auth-spring-boot-starter` |
-| 设计文档 | [design.md](./design.md) |
+| 设计文档 | [design.md](./design.md)（鉴权 P1）· [login-design.md](./login-design.md)（登录编排，阶段 0） |
 | **业务接入** | **[integration.md](./integration.md)** |
-| 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) |
+| 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) · [login-phase0-checklist.md](./login-phase0-checklist.md) |
 | 发布状态 | **可发布**（1.0.0-SNAPSHOT，需与 exception 一并引入） |
 
 ---
@@ -26,7 +26,13 @@
 - 网关层鉴权（API Gateway 另议；服务内与本组件分层）。
 - 细粒度业务权限模型（角色/数据权限表在业务系统）。
 - Reactive Web（WebFlux）安全链（一期仅 `SERVLET`）。
-- 登录页、验证码、短信登录 UI。
+- 登录页、验证码、短信登录 UI（**前端**不在组件范围）。
+
+## 二期规划（登录编排）
+
+- 可配置 **短信验证码登录**（独立 URL：发码 / 登录）、全局 `sms-length`（4 或 6）、测试环境 `fixed-code` / `mobile-suffix` **二选一**。
+- 可选 **独立注册** 与 **登录即注册**（同属 `component.auth.login`）。
+- 详见 **[login-design.md](./login-design.md)**；编码前须通过 [login-phase0-checklist.md](./login-phase0-checklist.md)。
 
 ---
 

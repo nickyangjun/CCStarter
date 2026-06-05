@@ -99,6 +99,57 @@ curl_json() {
   curl -sS -X "$method" "$url" "$@"
 }
 
+# 格式化 JSON 输出到终端（失败则原样打印）
+pretty_json() {
+  local json="$1"
+  if command -v jq >/dev/null 2>&1; then
+    echo "$json" | jq '.' 2>/dev/null || echo "$json"
+  else
+    echo "$json" | python3 -m json.tool 2>/dev/null || echo "$json"
+  fi
+}
+
+# 打印接口请求摘要
+log_api_request() {
+  local method="$1"
+  local path="$2"
+  local req_body="${3:-}"
+  if [[ -n "$req_body" ]]; then
+    log_info "请求: ${method} ${path}"
+    log_info "请求体:"
+    pretty_json "$req_body" | sed 's/^/  /'
+  else
+    log_info "请求: ${method} ${path}"
+  fi
+}
+
+# 打印 HTTP 响应；mask_token=1 时对 accessToken 脱敏展示
+log_api_response() {
+  local label="$1"
+  local status="$2"
+  local body="$3"
+  local mask_token="${4:-0}"
+  log_info "${label} HTTP ${status}"
+  log_info "响应体:"
+  if [[ "$mask_token" == "1" ]]; then
+    echo "$body" | python3 -c "
+import json, sys
+raw = sys.stdin.read()
+try:
+    d = json.loads(raw)
+except json.JSONDecodeError:
+    print(raw)
+    sys.exit(0)
+t = d.get('accessToken')
+if isinstance(t, str) and t:
+    d['accessToken'] = t[:16] + '...(' + str(len(t)) + ' chars)'
+print(json.dumps(d, ensure_ascii=False, indent=2))
+" 2>/dev/null | sed 's/^/  /' || pretty_json "$body" | sed 's/^/  /'
+  else
+    pretty_json "$body" | sed 's/^/  /'
+  fi
+}
+
 # 从 curl -D 响应头中读取指定 header（不区分大小写）
 response_header_value() {
   local headers="$1"

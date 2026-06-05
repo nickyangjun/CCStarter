@@ -34,7 +34,32 @@ component:
       - /actuator/**
       - /api/sample/ping
       - /api/sample/error/**
-      - /api/sample/auth/login
+      - /api/sample/auth/me
+      # 登录接口（login 模块也会自动合并 paths；显式写出便于排查 401）
+      - /api/auth/sms/**
+      - /api/auth/email/**
+    login:
+      enabled: true
+      sms-length: 6
+      email-code-length: 6
+      sms:
+        enabled: true
+      email:
+        enabled: true
+      register:
+        enabled: true
+        login-as-register: true
+      test:
+        # 生产防呆：下面 test.sms / test.email 任一 enabled=true 时，此项必须为 true，否则应用启动失败。
+        # 含义是「确认当前环境有意使用测试验证码」，不是鼓励在生产开测试码。
+        # sample 仅用于本地演示，正式 prod 禁止配置 test.sms / test.email。
+        allow-in-production: true
+        sms:
+          enabled: true
+          fixed-code: "123456"   # 任意手机号可用该码登录，不发真实短信
+        email:
+          enabled: true
+          fixed-code: "123456"   # 任意邮箱可用该码登录，不发真实邮件
   log:
     enabled: true
     trace:

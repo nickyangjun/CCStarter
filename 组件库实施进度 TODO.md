@@ -1,6 +1,6 @@
 # 组件库实施进度 TODO
 
-> **最后更新**：2026-06-04 | **当前阶段**：P1～P3 **可发布**（SNAPSHOT）
+> **最后更新**：2026-06-05 | **当前阶段**：P1～P3 可发布（SNAPSHOT）；**P2.1 登录编排已实现**（待 MINOR 版本与 integration 文档）
 
 ---
 
@@ -10,7 +10,8 @@
 |------|------|------|
 | P0 | 工程骨架 | ✅ 已完成 |
 | P1 | common-exception | ✅ **可发布**（1.0.0-SNAPSHOT） |
-| **P2** | common-auth | ✅ **可发布**（1.0.0-SNAPSHOT） |
+| **P2** | common-auth（JWT / Security） | ✅ **可发布**（1.0.0-SNAPSHOT） |
+| **P2.1** | common-auth · login 编排 | ✅ **已实现**（随 auth SNAPSHOT；SDK/Redis 待办） |
 | **P3** | common-log | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | P4～P6 | file / dict / sms | ⬜ 未开始 |
 
@@ -64,6 +65,29 @@
 | 模块 | 阶段 0 | 骨架 | 实现 | 发布 |
 |------|--------|------|------|------|
 | common-auth | ✅ | ✅ | ✅ | ✅ SNAPSHOT |
+| common-auth · login | ✅ [login-design.md](docs/features/auth/login-design.md) | ✅ | ✅ | 🟡 随 auth SNAPSHOT |
+
+### 4.3 登录编排（P2.1 / auth MINOR）
+
+- [x] 阶段 0：`login-design.md`、`login-phase0-checklist.md`、前缀 `component.auth.login`
+- [x] `LoginAutoConfiguration` + `LoginProperties`（`component.auth.login`）
+- [x] SMS：发码 / 登录 / 注册独立 URL；`sms-length` 4 或 6
+- [x] 邮箱：发码 / 登录 / 注册独立 URL；`email-code-length` 4 或 6
+- [x] 测试验码：`test.sms`（`fixed-code` 与 `mobile-suffix` 二选一）、`test.email.fixed-code`
+- [x] `test.allow-in-production` 生产防呆 + 配置注释
+- [x] 注册 + `login-as-register`；`LoginUserResolver` / `LoginUserRegistrar` SPI
+- [x] 登录路径自动合并白名单 + sample 显式 `/api/auth/sms/**`、`/api/auth/email/**`
+- [x] exception：`MappedHttpStatusException` + `LoginAuthException` 错误码映射
+- [x] 占位：`StubSmsCodeSender`、`StubEmailCodeSender`、内存 `SmsCodeStore` / `EmailCodeStore`
+- [x] 单测：`LoginPropertiesValidatorTest`、`SmsCodeServiceTest`、`EmailCodeServiceTest`、`LoginAutoConfigurationTests`
+- [x] sample：`SampleLoginSpiConfiguration` + `AuthIntegrationTest`（短信/邮箱）
+- [x] 冒烟：`POST /api/auth/sms/login`（test 固定码）；请求/响应 JSON 输出（token 脱敏）
+- [x] 根 README `scripts/` 章节；`scripts/README.md` 登录 401 排查说明
+- [ ] **[待办] `SmsCodeSender` 对接第三方短信 SDK**（阿里云/腾讯云等）
+- [ ] **[待办] `EmailCodeSender` 对接邮件服务**（SMTP/云邮件）
+- [ ] **[待办] 正式环境 `SmsCodeStore` / `EmailCodeStore` Redis 实现**
+- [ ] `docs/features/auth/integration.md` 增补 login 章节
+- [ ] auth **MINOR** 版本号与 CHANGELOG（如 `1.1.0-SNAPSHOT`）
 
 ---
 
@@ -103,11 +127,14 @@
 | 2026-06-04 | P2 标可发布 + 业务接入文档 | SNAPSHOT 可引用 |
 | 2026-06-04 | P3 log 阶段 0 + logging.md | 五项决策固化 |
 | 2026-06-04 | P3 log 实现 + 接入文档 | 可发布 SNAPSHOT |
+| 2026-06-05 | P2.1 login 编排（SMS+邮箱+注册） | `mvn verify` 通过 |
+| 2026-06-05 | 冒烟脚本登录 + 请求/响应日志输出 | `test-sample.sh` 可观测 |
 
 ---
 
 ## 八、快速链接
 
+- [login 设计](./docs/features/auth/login-design.md)
 - [log 接入](./docs/features/log/integration.md)
 - [log 设计](./docs/features/log/design.md)
 - [MDC 约定](./docs/architecture/logging.md)

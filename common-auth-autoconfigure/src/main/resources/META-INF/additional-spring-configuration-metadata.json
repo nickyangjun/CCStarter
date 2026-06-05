@@ -1,0 +1,45 @@
+{
+  "groups": [
+    {
+      "name": "component.auth.login",
+      "description": "Login orchestration (SMS, register)."
+    }
+  ],
+  "properties": [
+    {
+      "name": "component.auth.login.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Enable login HTTP endpoints and SMS flow."
+    },
+    {
+      "name": "component.auth.login.sms-length",
+      "type": "java.lang.Integer",
+      "defaultValue": 6,
+      "description": "SMS verification code length; only 4 or 6."
+    },
+    {
+      "name": "component.auth.login.test.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Test verification mode (fixed-code or mobile-suffix)."
+    },
+    {
+      "name": "component.auth.login.test.fixed-code",
+      "type": "java.lang.String",
+      "description": "Fixed test code for any mobile."
+    },
+    {
+      "name": "component.auth.login.test.mobile-suffix",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Accept code equal to last sms-length digits of mobile."
+    },
+    {
+      "name": "component.auth.login.test.allow-in-production",
+      "type": "java.lang.Boolean",
+      "defaultValue": false,
+      "description": "Acknowledgement flag when test.sms or test.email verification bypass is enabled. Must be true if any test channel is active, otherwise startup fails. Not for real production; use only in local/CI test profiles."
+    }
+  ]
+}
