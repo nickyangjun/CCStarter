@@ -9,7 +9,7 @@
 | log | `component.log` | — | 已实现 | `docs/features/log/` |
 | file | `component.file` | — | 待建设 | `docs/features/file/` |
 | exception | `component.exception` | — | 已实现 | `docs/features/exception/` |
-| dict | `component.dict` | — | 待建设 | `docs/features/dict/` |
+| dict | `component.dict` | — | **阶段 0 已完成** | `docs/features/dict/` |
 | sms | `component.sms` | — | 待建设 | `docs/features/sms/` |
 
 **登记日期**：2026-06-04（P0 初始化）；P1 exception、P2 auth、P3 log 已实现（SNAPSHOT）

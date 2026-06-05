@@ -386,7 +386,7 @@ Content-Type: application/json
 | 2 | `SmsCodeService` + 测试规则 + `SmsLoginController`（发码/登录） | ⬜ |
 | 3 | 注册 Controller + `login-as-register` + SPI 校验 | ⬜ |
 | 4 | 单测 + sample 替换 `DemoAuthController` 演示 + 冒烟用例 | ⬜ |
-| 5 | [integration.md](./integration.md) 增补 login 章节 | ⬜ |
+| 5 | [integration.md](./integration.md) 增补 login 章节 | ✅ |
 
 **版本**：登录编排随 `common-auth` **MINOR** 升级（如 `1.1.0-SNAPSHOT`），破坏性变更走 MAJOR。
 

@@ -20,11 +20,14 @@
         <module>common-auth-spring-boot-starter</module>
         <module>common-log-autoconfigure</module>
         <module>common-log-spring-boot-starter</module>
+        <module>common-dict-autoconfigure</module>
+        <module>common-dict-spring-boot-starter</module>
         <module>company-component-samples</module>
     </modules>
 
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
+        <auth.revision>1.1.0-SNAPSHOT</auth.revision>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>${java.version}</maven.compiler.release>
@@ -34,6 +37,7 @@
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
         <jjwt.version>0.12.6</jjwt.version>
+        <testcontainers.version>1.20.4</testcontainers.version>
     </properties>
 
     <dependencyManagement>
@@ -59,12 +63,12 @@
             <dependency>
                 <groupId>com.company.component</groupId>
                 <artifactId>common-auth-autoconfigure</artifactId>
-                <version>${revision}</version>
+                <version>${auth.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.company.component</groupId>
                 <artifactId>common-auth-spring-boot-starter</artifactId>
-                <version>${revision}</version>
+                <version>${auth.revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.company.component</groupId>
@@ -75,6 +79,31 @@
                 <groupId>com.company.component</groupId>
                 <artifactId>common-log-spring-boot-starter</artifactId>
                 <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-dict-autoconfigure</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.company.component</groupId>
+                <artifactId>common-dict-spring-boot-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.redis</groupId>
+                <artifactId>testcontainers-redis</artifactId>
+                <version>2.2.2</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

@@ -7,7 +7,7 @@
 | 设计文档 | [design.md](./design.md)（鉴权 P1）· [login-design.md](./login-design.md)（登录编排，阶段 0） |
 | **业务接入** | **[integration.md](./integration.md)** |
 | 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) · [login-phase0-checklist.md](./login-phase0-checklist.md) |
-| 发布状态 | **可发布**（1.0.0-SNAPSHOT，需与 exception 一并引入） |
+| 发布状态 | JWT：**1.0.0-SNAPSHOT**；含 login 编排：**1.1.0-SNAPSHOT**（需与 exception 一并引入） |
 
 ---
 
@@ -28,11 +28,12 @@
 - Reactive Web（WebFlux）安全链（一期仅 `SERVLET`）。
 - 登录页、验证码、短信登录 UI（**前端**不在组件范围）。
 
-## 二期规划（登录编排）
+## 登录编排（P2.1，已发布 1.1.0-SNAPSHOT）
 
-- 可配置 **短信验证码登录**（独立 URL：发码 / 登录）、全局 `sms-length`（4 或 6）、测试环境 `fixed-code` / `mobile-suffix` **二选一**。
-- 可选 **独立注册** 与 **登录即注册**（同属 `component.auth.login`）。
-- 详见 **[login-design.md](./login-design.md)**；编码前须通过 [login-phase0-checklist.md](./login-phase0-checklist.md)。
+- 可配置 **短信 / 邮箱验证码登录**（独立 URL：发码 / 登录 / 注册）、`sms-length` / `email-code-length`（4 或 6）。
+- 测试环境 `fixed-code` / `mobile-suffix`（短信二选一），配置仅写在 `application-test.yml`。
+- 可选 **独立注册** 与 **登录即注册**（`component.auth.login`）。
+- 接入见 **[integration.md](./integration.md) §3**；设计见 **[login-design.md](./login-design.md)**。
 
 ---
 
@@ -62,7 +63,7 @@
 
 1. 依赖：`common-exception-spring-boot-starter` + `common-auth-spring-boot-starter`（import BOM）。
 2. 配置：`component.auth.enabled=true`，`jwt-secret` 用 `${JWT_SECRET}` 注入。
-3. 登录：业务 Controller 注入 `JwtService#createToken`，组件不提供登录页。
+3. 登录：启用 `login.enabled` 使用组件编排，或业务 Controller 注入 `JwtService#createToken`。
 4. 白名单：登录、健康检查、静态公开 API 等写入 `whitelist`。
 
 完整步骤见 **[integration.md](./integration.md)**。

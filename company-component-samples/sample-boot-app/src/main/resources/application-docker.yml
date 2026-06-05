@@ -8,3 +8,8 @@ spring:
     redis:
       host: redis
       port: 6379
+
+component:
+  dict:
+    cache:
+      type: redis

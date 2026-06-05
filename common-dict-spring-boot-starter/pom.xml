@@ -10,15 +10,14 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>common-auth-spring-boot-starter</artifactId>
-    <version>${auth.revision}</version>
-    <name>common-auth-spring-boot-starter</name>
-    <description>Starter for common-auth component</description>
+    <artifactId>common-dict-spring-boot-starter</artifactId>
+    <name>common-dict-spring-boot-starter</name>
+    <description>Starter for common-dict component</description>
 
     <dependencies>
         <dependency>
             <groupId>com.company.component</groupId>
-            <artifactId>common-auth-autoconfigure</artifactId>
+            <artifactId>common-dict-autoconfigure</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
