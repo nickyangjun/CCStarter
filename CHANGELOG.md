@@ -15,6 +15,8 @@
 
 ### Changed
 
+- **deploy/sample**：多阶段 Dockerfile（容器内 Maven 编译，无需宿主机 Maven / 预打包 JAR）；`.dockerignore` + BuildKit `.m2` 缓存
+- **deploy-sample-docker.sh**：改为 `compose up --build`；`RUN_SMOKE=0` 可仅常驻不冒烟
 - **common-dict**：`DictAutoConfiguration` 在 `RedisAutoConfiguration` 之后加载，修复 `cache.type=redis` 时 `DictController` 未注册
 - **sample · docker**：`SPRING_PROFILES_ACTIVE=docker,test`（compose 激活，不再在 profile 文件内 `spring.profiles.include`）
 - **deploy/sample**：compose 增加 MySQL / Redis healthcheck；支持 `MYSQL_PORT` / `SAMPLE_HOST_PORT` 环境变量

@@ -1,0 +1,17 @@
+.git
+.gitignore
+**/.flattened-pom.xml
+**/target
+.idea
+.cursor
+.vscode
+*.iml
+.smoke
+deploy/sample/build
+docs
+scripts
+agent-transcripts
+组件库实施进度 TODO.md
+CHANGELOG.md
+README.md
+**/README.md

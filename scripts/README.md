@@ -8,7 +8,7 @@
 | [run-sample.sh](./run-sample.sh) | **仅启动** sample（前台，看日志） |
 | [test-sample.sh](./test-sample.sh) | **仅测试**（要求 sample 已启动） |
 | [smoke-test.sh](./smoke-test.sh) | 一键：build → 后台启动 → test → 停进程 |
-| [deploy-sample-docker.sh](./deploy-sample-docker.sh) | Docker 部署 + `test-sample.sh` |
+| [deploy-sample-docker.sh](./deploy-sample-docker.sh) | Docker 多阶段构建 + 启动；可选冒烟（`RUN_SMOKE=0` 仅常驻） |
 
 ## 本地开发（推荐）
 
@@ -40,6 +40,8 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 | `SMOKE_BASE_URL` | `http://127.0.0.1:18080` | 测试基地址 |
 | `SMOKE_TRACE_ID` | `smoke-trace-0001` | 模拟网关 TraceId |
 | `BUILD_FIRST` | `1` | `run-sample` / `smoke-test` 是否先 build |
+| `RUN_SMOKE` | `1` | `deploy-sample-docker.sh` 是否在 compose 后跑 `test-sample.sh` |
+| `DOCKER_SKIP_TESTS` | `1` | Docker 镜像构建时是否 `mvn -DskipTests`（`0` 则容器内跑单测） |
 | `SMOKE_LOG` | `.smoke/...` | 仅 `smoke-test` 后台日志；`test-sample` 默认不校验文件 |
 
 ## 测试覆盖（test-sample / smoke-test）

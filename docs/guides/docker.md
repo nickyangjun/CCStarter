@@ -4,19 +4,28 @@
 
 ## 方式一：sample 全栈（推荐）
 
-一键构建 sample JAR、启动 MySQL + Redis + 应用并跑冒烟：
+**无需本地 Maven**，在 Docker 内多阶段编译并启动 MySQL + Redis + 应用：
 
 ```bash
-./scripts/deploy-sample-docker.sh
+docker compose -f deploy/sample/docker-compose.yml up -d --build
+```
+
+带冒烟（可选）：
+
+```bash
+./scripts/deploy-sample-docker.sh              # 默认跑 test-sample
+RUN_SMOKE=0 ./scripts/deploy-sample-docker.sh  # 只启动，服务常驻
 ```
 
 `deploy/sample/docker-compose.yml` 包含：
 
 | 服务 | 端口（默认） | 用途 |
 |------|--------------|------|
-| mysql | 3306 | Flyway 建表 + `JdbcDictDataProvider` |
+| mysql | 3307（映射容器 3306） | Flyway 建表 + `JdbcDictDataProvider` |
 | redis | 6379 | 字典缓存 + 登录验证码 Store |
-| sample-boot-app | 18080 | 样例应用（`SPRING_PROFILES_ACTIVE=docker`） |
+| sample-boot-app | 18080 | 样例应用（`SPRING_PROFILES_ACTIVE=docker,test`） |
+
+首次 `up --build` 会下载 Maven 依赖，耗时较长；后续改代码 rebuild 会复用 BuildKit 的 `.m2` 缓存。
 
 停止：
 

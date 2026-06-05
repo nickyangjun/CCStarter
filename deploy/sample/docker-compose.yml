@@ -28,8 +28,10 @@ services:
   sample-boot-app:
     image: ccstarter/sample-boot-app:local
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: deploy/sample/Dockerfile
+      args:
+        SKIP_TESTS: ${DOCKER_SKIP_TESTS:-1}
     ports:
       - "${SAMPLE_HOST_PORT:-18080}:18080"
     depends_on:
