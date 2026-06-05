@@ -7,7 +7,7 @@
 .vscode
 *.iml
 .smoke
-deploy/sample/build
+deploy/docker/stack/build
 docs
 scripts
 agent-transcripts

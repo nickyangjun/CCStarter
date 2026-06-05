@@ -150,8 +150,8 @@ Authorization: Bearer <accessToken>
 | `LoginUserRegistrar` | `register.enabled` 或 `login-as-register=true` **必填** | `register(RegisterRequest)` 创建用户并返回 `LoginPrincipal` |
 | `SmsCodeSender` | 生产发真实短信 | 调用云厂商 SDK 发送验证码 |
 | `EmailCodeSender` | 生产发真实邮件 | SMTP 或云邮件 API |
-| `SmsCodeStore` | 生产多实例部署 **建议** | 验证码持久化（默认内存，仅 dev/sample） |
-| `EmailCodeStore` | 同上 | 邮箱通道独立 Store |
+| `SmsCodeStore` | 生产多实例 **建议** | 验证码持久化；默认内存（dev/sample）；生产用 **`common-auth-login-redis-spring-boot-starter`** |
+| `EmailCodeStore` | 同上 | 邮箱通道独立 Store；同上 Redis starter |
 
 实现类注册为 Spring Bean 即可；组件通过 `@ConditionalOnMissingBean` 优先使用业务实现。
 
@@ -180,7 +180,27 @@ public class MyLoginSpiConfiguration {
 }
 ```
 
-生产环境还需提供 `SmsCodeSender` / `EmailCodeSender` 及 Redis `SmsCodeStore` / `EmailCodeStore`（见 [login-design.md](./login-design.md) §6、根目录 TODO §4.3）。
+生产环境还需提供 `SmsCodeSender` / `EmailCodeSender`（见 [login-design.md](./login-design.md) §6、根目录 TODO §4.3）。
+
+多实例部署时，引入 **`common-auth-login-redis-spring-boot-starter`** 替代内存 Store：
+
+```xml
+<dependency>
+    <groupId>com.company.component</groupId>
+    <artifactId>common-auth-login-redis-spring-boot-starter</artifactId>
+</dependency>
+```
+
+```yaml
+component:
+  auth:
+    login:
+      redis:
+        enabled: true
+        key-prefix: "${spring.application.name:app}:login"
+```
+
+需配置 `spring.data.redis.*`；与 `common-dict` 共用 Redis 实例时 **key 前缀须分离**（dict 默认 `{app}:dict`）。样例见 `sample-boot-app` 的 `application-docker.yml`。
 
 ### 3.4 测试环境验证码（仅 `test` profile）
 

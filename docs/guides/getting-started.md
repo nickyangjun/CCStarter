@@ -19,7 +19,7 @@ chmod +x scripts/*.sh scripts/lib/common.sh
 ./scripts/smoke-test.sh
 ```
 
-等价于：`mvn verify` + 打包 sample + 自动启动并校验 **exception / auth / log** 核心 HTTP 流程。  
+等价于：`mvn verify` + 打包 sample + 自动启动并校验 **exception / auth / log / dict** 核心 HTTP 流程。  
 脚本说明见 [scripts/README.md](../../scripts/README.md)。
 
 仅编译（与 CI 一致）：
@@ -53,8 +53,9 @@ Actuator：`http://localhost:18080/actuator/health`
 
 启用组件后（sample 默认已开启），冒烟脚本会自动验证：
 
-- ping / 登录 / JWT 受保护接口
+- ping / 短信登录 JWT / 受保护接口
 - 401、500、404 响应体 `traceId`
+- `GET /api/dict/gender` 字典 API
 - 请求日志中的 `traceId`、`userId`
 
 手动抽查示例：
@@ -75,23 +76,26 @@ mvn spring-boot:run -Dspring-boot.run.profiles=test
 
 ## 4. 使用 Docker 中间件（可选）
 
+**仅中间件（宿主机 mvn）** — 见 [deploy/README.md](../../deploy/README.md)：
+
 ```bash
-cd deploy/docker
-cp .env.example .env   # 按需修改
+cd deploy/docker/infra
+cp .env.example .env
 docker compose up -d
-cd ../../company-component-samples/sample-boot-app
-mvn spring-boot:run -Dspring-boot.run.profiles=docker
 ```
 
-详见 [docker.md](./docker.md)。
+启动 sample 前设置 `SPRING_DATASOURCE_*` / `SPRING_DATA_REDIS_*` 为 `127.0.0.1`（详见 [docker.md](./docker.md) 方式二）。
 
-## 4.1 Docker 部署 sample（可选）
+**全栈容器** — 见 [docker.md](./docker.md) 方式一或 `./scripts/deploy-sample-docker.sh`。
+
+## 4.1 Docker 部署 sample 全栈（可选）
 
 ```bash
-./scripts/deploy-sample-docker.sh
+./scripts/deploy-sample-docker.sh              # 默认 build + 冒烟
+RUN_SMOKE=0 ./scripts/deploy-sample-docker.sh  # 仅常驻
 ```
 
-构建 JAR → 镜像 `ccstarter/sample-boot-app:local` → 启动容器 → 自动冒烟。
+容器内多阶段 Maven 编译 → MySQL + Redis + sample（`SPRING_PROFILES_ACTIVE=docker,test`）。详见 [docker.md](./docker.md)。
 
 ## 5. 业务项目引用（P1+ 模块发布后）
 

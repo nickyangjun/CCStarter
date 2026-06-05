@@ -38,7 +38,7 @@
 | 4 | Docker 联调缓存 | **`docker` profile 使用 `redis`**（`application-docker.yml` + 已有 Redis compose） |
 | 5 | Redis 连接 | 仅用 **`spring.data.redis.*`**（基础设施）；`component.dict.cache.*` 管行为 |
 | 6 | 数据源 | **必须**实现 `DictDataProvider`；组件不内置 SQL |
-| 7 | 与 login-redis 关系 | 共用 Redis 实例，**key 前缀分离**（`{app}:dict:*` vs 未来 `{app}:login:*`） |
+| 7 | 与 login-redis 关系 | 共用 Redis 实例，**key 前缀分离**（`{app}:dict:*` vs `{app}:login:*`） |
 | 8 | 字段命名 | 数据库 **`snake_case`**（`dict_type`）；Java/JSON **`camelCase`**（`dictType`）；见 [design §4.0](./design.md#40-命名规范数据库-vs-java-vs-配置) |
 
 ---

@@ -5,7 +5,7 @@
 | 项 | 说明 |
 |----|------|
 | 技术基线 | Spring Boot **3.2.x**、Java **17+** |
-| 当前阶段 | **P1～P3 可发布**（SNAPSHOT，见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
+| 当前阶段 | **P1～P3、P2.1 login、P5 dict 可发布**（SNAPSHOT，见 [实施进度 TODO](./组件库实施进度%20TODO.md)） |
 | 规范文档 | [Spring Boot 可插拔积木组件建设指南](./Spring Boot 可插拔积木组件建设指南.md)（v2.1，**实施标准，勿当进度板修改**） |
 
 ---
@@ -26,16 +26,22 @@ CCStarter/
 │   ├── smoke-test.sh                # 一键 build + 测 + 停（CI 同款）
 │   ├── deploy-sample-docker.sh      # sample Docker 部署 + 测试
 │   └── lib/                         # common.sh、smoke-cases.sh
-├── deploy/docker/                   # 本地 / CI 中间件（Docker Compose）
-├── deploy/sample/                   # sample-boot-app 镜像与 compose
+├── deploy/                          # 本地 Docker（infra/stack）与 release 发布说明
+│   ├── README.md
+│   ├── docker/infra/                # MySQL + Redis（宿主机 mvn 联调）
+│   ├── docker/stack/                # 全栈 sample 镜像 + compose
+│   └── release/                     # Maven 发布与版本晋级
 ├── CHANGELOG.md
 ├── common-exception-autoconfigure/
 ├── common-exception-spring-boot-starter/
 ├── common-auth-autoconfigure/       # P2 JWT + Security
 ├── common-auth-spring-boot-starter/
+├── common-auth-login-redis-*        # P2.1 验证码 Redis Store（可选 starter）
 ├── common-log-autoconfigure/        # P3 TraceId / 请求日志 / 操作日志 SPI
 ├── common-log-spring-boot-starter/
-└── …                              # P4+：file 等
+├── common-dict-autoconfigure/       # P5 字典 DictService + 可选 HTTP API
+├── common-dict-spring-boot-starter/
+└── …                              # P4 file、P6 sms 等
 ```
 
 每个业务能力（鉴权、日志、异常等）在 P1 之后按 **autoconfigure + starter** 双模块追加，详见建设指南第二节。
@@ -96,18 +102,19 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 
 ### 冒烟测试覆盖
 
-`test-sample.sh` / `smoke-test.sh` 会校验 exception、auth、log 核心流程：
+`test-sample.sh` / `smoke-test.sh` 会校验 exception、auth、log、dict 核心流程：
 
 | # | 场景 |
 |---|------|
 | 1 | 带 `X-Trace-Id` 透传（默认 `smoke-trace-0001`，模拟网关） |
 | 2 | **无** `X-Trace-Id` 时服务自建 traceId（每次请求新 UUID） |
-| 3 | 登录获取 JWT |
+| 3 | 短信验证码登录获取 JWT（`test` profile 固定码） |
 | 4 | 带 Token 访问受保护接口 |
 | 5 | 无 Token → 401 + 响应体 `traceId` |
 | 6 | 500 / 404 统一错误 JSON 含 `traceId` |
 | 7 | `POST /api/sample/orders` 操作日志链路 |
-| 8 | 后台启动时校验日志文件（仅 `smoke-test.sh`） |
+| 8 | `GET /api/dict/gender` 字典 HTTP API（白名单，无 Token） |
+| 9 | 后台启动时校验日志文件（仅 `smoke-test.sh`） |
 
 常用环境变量：
 
@@ -122,20 +129,20 @@ chmod +x scripts/*.sh scripts/lib/*.sh
 
 ### Docker
 
-**sample 应用镜像（组件联调）**
+**sample 全栈（推荐：MySQL + Redis + 应用，容器内 Maven 编译）**
 
 ```bash
-./scripts/deploy-sample-docker.sh
+./scripts/deploy-sample-docker.sh              # 默认 build + 冒烟
+RUN_SMOKE=0 ./scripts/deploy-sample-docker.sh  # 仅常驻服务
 ```
 
-**中间件（Redis 等，可选）**
+详见 [docs/guides/docker.md](./docs/guides/docker.md) 与 [deploy/README.md](./deploy/README.md)。
 
-使用 Docker 中间件时（先启动 compose，见 [docs/guides/docker.md](./docs/guides/docker.md)）：
+**仅中间件（宿主机 mvn + docker profile）**
 
 ```bash
-cd deploy/docker && docker compose up -d
-cd company-component-samples/sample-boot-app
-mvn spring-boot:run -Dspring-boot.run.profiles=docker
+cd deploy/docker/infra && docker compose up -d
+# 连接地址须用 127.0.0.1，见 deploy/README.md
 ```
 
 ---
@@ -178,7 +185,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
 </dependencies>
 ```
 
-Maven 坐标见建设指南 **第十四节**；[鉴权接入](./docs/features/auth/integration.md)、[日志接入](./docs/features/log/integration.md)。
+Maven 坐标见建设指南 **第十四节**；[鉴权接入](./docs/features/auth/integration.md)、[日志接入](./docs/features/log/integration.md)、[字典接入](./docs/features/dict/integration.md)。
 
 ### 2. 基础配置（各环境共用）
 
@@ -264,8 +271,10 @@ component:
 | [docs/architecture/team-decisions.md](./docs/architecture/team-decisions.md) | 团队锁定决策 |
 | [docs/guides/getting-started.md](./docs/guides/getting-started.md) | 克隆、构建、发布 |
 | [scripts/README.md](./scripts/README.md) | 构建 / 运行 / 冒烟 / 部署脚本 |
-| [auth 业务接入](./docs/features/auth/integration.md) | JWT、白名单、登录集成 |
+| [deploy/README.md](./deploy/README.md) | 本地 Docker（infra/stack）与 release 目录说明 |
+| [auth 业务接入](./docs/features/auth/integration.md) | JWT、白名单、登录编排、login-redis |
 | [log 业务接入](./docs/features/log/integration.md) | TraceId、MDC、操作日志 SPI |
+| [dict 业务接入](./docs/features/dict/integration.md) | DictService、缓存、HTTP API |
 | [MDC 约定](./docs/architecture/logging.md) | `tid` / SkyWalking / 与 userId 分离 |
 
 ---
@@ -277,8 +286,10 @@ component:
 | P0 | 父工程、BOM、docs、Docker、sample | ✅ 已完成 |
 | P1 | common-exception | ✅ 可发布（SNAPSHOT） |
 | P2 | common-auth | ✅ 可发布（SNAPSHOT，需配 exception） |
+| P2.1 | common-auth · login + login-redis | ✅ 可发布（1.1.0-SNAPSHOT；短信/邮件 SDK 待对接） |
 | P3 | common-log | ✅ 可发布（SNAPSHOT，需配 exception） |
-| P4～P6 | file / dict / sms | 未开始 |
+| P5 | common-dict | ✅ 可发布（SNAPSHOT；树形/多语言等为二期） |
+| P4 / P6 | common-file / common-sms | ⬜ 未开始 |
 
 明细以 [组件库实施进度 TODO](./组件库实施进度%20TODO.md) 为准。
 

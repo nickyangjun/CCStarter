@@ -12,7 +12,7 @@
 | Spring Boot 版本 | **3.2.12** | 全库锁定，禁止与 3.3.x 混用 |
 | 配置绑定 | `application.yml` + kebab-case | |
 | 业务接入 | 仅 starter + BOM | 禁止直接依赖 autoconfigure |
-| 本地中间件 | Docker Compose + profile `docker` | 见 [docker 指南](../guides/docker.md) |
+| 本地中间件 | Docker Compose + profile `docker` | 见 [deploy/README.md](../deploy/README.md) |
 | 版本策略 | SemVer | 破坏性变更升 MAJOR |
 | 测试 | JUnit 5 + AssertJ + `ApplicationContextRunner` | |
 | 覆盖率 | autoconfigure ≥ 70%，核心包 ≥ 80% | P1+ 模块在 CI 强制执行 |

@@ -22,4 +22,4 @@ release.properties
 # Logs
 *.log
 .smoke/
-deploy/sample/build/
+deploy/docker/stack/build/

@@ -1,6 +1,6 @@
 # common-auth · 登录编排子能力设计（阶段 0）
 
-> **状态**：已实现（SMS + 邮箱）；邮件/短信 SDK 见 TODO  
+> **状态**：已实现（SMS + 邮箱 + login-redis）；**待办**：第三方短信/邮件 SDK（见根目录 TODO §4.3）  
 > **前置**：P1 鉴权（JWT + Security 链）已发布，见 [design.md](./design.md)  
 > **配置前缀**：`component.auth.login`（挂在 `component.auth` 域下，不单独 Maven 模块）
 
@@ -381,12 +381,13 @@ Content-Type: application/json
 
 | 阶段 | 内容 | 状态 |
 |------|------|------|
-| 0 | 本文档 + [login-phase0-checklist.md](./login-phase0-checklist.md) | 进行中 |
-| 1 | `LoginProperties` + 元数据 + 条件装配骨架 | ⬜ |
-| 2 | `SmsCodeService` + 测试规则 + `SmsLoginController`（发码/登录） | ⬜ |
-| 3 | 注册 Controller + `login-as-register` + SPI 校验 | ⬜ |
-| 4 | 单测 + sample 替换 `DemoAuthController` 演示 + 冒烟用例 | ⬜ |
+| 0 | 本文档 + [login-phase0-checklist.md](./login-phase0-checklist.md) | ✅ |
+| 1 | `LoginProperties` + 元数据 + 条件装配骨架 | ✅ |
+| 2 | `SmsCodeService` + 测试规则 + `SmsLoginController`（发码/登录） | ✅ |
+| 3 | 注册 Controller + `login-as-register` + SPI 校验 | ✅ |
+| 4 | 单测 + sample SPI + 冒烟用例 | ✅ |
 | 5 | [integration.md](./integration.md) 增补 login 章节 | ✅ |
+| 6 | `common-auth-login-redis-*`（Redis Store） | ✅ |
 
 **版本**：登录编排随 `common-auth` **MINOR** 升级（如 `1.1.0-SNAPSHOT`），破坏性变更走 MAJOR。
 
@@ -421,4 +422,4 @@ Content-Type: application/json
 | 4 | **注册接口** 归属 login 子能力，可配置开关 |
 | 5 | 支持 **登录即注册**（`login-as-register`） |
 
-**下一步**：评审通过后按 §10 阶段 1 开始编码；编码前完成 [login-phase0-checklist.md](./login-phase0-checklist.md)。
+**下一步**：对接生产 `SmsCodeSender` / `EmailCodeSender`（第三方 SDK）；Redis Store 见 `common-auth-login-redis-spring-boot-starter`。

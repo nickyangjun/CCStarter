@@ -4,8 +4,9 @@
 |----|------|
 | 配置前缀 | `component.auth` |
 | Maven starter | `common-auth-spring-boot-starter` |
-| 设计文档 | [design.md](./design.md)（鉴权 P1）· [login-design.md](./login-design.md)（登录编排，阶段 0） |
+| 设计文档 | [design.md](./design.md)（鉴权 P1）· [login-design.md](./login-design.md)（登录编排） |
 | **业务接入** | **[integration.md](./integration.md)** |
+| 可选 starter | `common-auth-login-redis-spring-boot-starter`（生产 Redis 验证码 Store） |
 | 阶段 0 检查 | [phase0-checklist.md](./phase0-checklist.md) · [login-phase0-checklist.md](./login-phase0-checklist.md) |
 | 发布状态 | JWT：**1.0.0-SNAPSHOT**；含 login 编排：**1.1.0-SNAPSHOT**（需与 exception 一并引入） |
 
@@ -34,6 +35,7 @@
 - 测试环境 `fixed-code` / `mobile-suffix`（短信二选一），配置仅写在 `application-test.yml`。
 - 可选 **独立注册** 与 **登录即注册**（`component.auth.login`）。
 - 接入见 **[integration.md](./integration.md) §3**；设计见 **[login-design.md](./login-design.md)**。
+- 生产多实例：可选 **`common-auth-login-redis-spring-boot-starter`**（`component.auth.login.redis.*`）。
 
 ---
 

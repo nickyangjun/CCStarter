@@ -11,7 +11,7 @@
 - [x] [README.md](./README.md)
 - [x] [design.md](./design.md)
 - [x] 统一表规范 `sys_dict_type` / `sys_dict_item`（design §4；含 `dict_source`、`is_builtin`、`item_value`、`item_code` 256、`extra_json` TEXT）
-- [x] 一期仅 `DictService` Bean、二期 HTTP API 已明确
+- [x] 一期 `DictService` Bean + 可选 HTTP API（`api.enabled`）已实现；树形/多语言等为二期
 - [x] sample `memory` / docker `redis` 已记录
 - [x] SPI `DictDataProvider` 草案与加载约定
 - [x] 与 exception、Redis key 隔离、login-redis 关系已说明
@@ -38,6 +38,6 @@
 - [x] Redis 行为与 `spring.data.redis` 分工已明确
 - [ ] 评审通过（负责人签字 / PR 评审）
 
-**阶段 0 结论**：✅ **通过**（2026-06-05），可进入阶段 1（模块骨架）
+**阶段 0 结论**：✅ **通过**（2026-06-05）；一期已实现并标可发布 SNAPSHOT。
 
-**下一步**：`common-dict-autoconfigure` + `common-dict-spring-boot-starter` POM → `DictProperties` → `DictService` + 内存缓存。
+**下一步**：业务接入见 [integration.md](./integration.md)；二期增强（树形/多语言/`@DictLabel`）见 [README.md §一期不做](./README.md#一期不做)。

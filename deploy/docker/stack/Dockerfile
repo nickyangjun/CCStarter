@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # 多阶段构建：容器内 Maven 编译 sample，无需宿主机安装 Maven
+# 编排见 deploy/docker/stack/docker-compose.yml
 
 FROM maven:3.9-eclipse-temurin-17 AS builder
 

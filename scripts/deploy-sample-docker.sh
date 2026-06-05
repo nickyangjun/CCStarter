@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/common.sh"
 
 require_cmd docker
-COMPOSE_FILE="${ROOT_DIR}/deploy/sample/docker-compose.yml"
+COMPOSE_FILE="${ROOT_DIR}/deploy/docker/stack/docker-compose.yml"
 RUN_SMOKE="${RUN_SMOKE:-1}"
 
 log_info "构建并启动（容器内 Maven 编译：MySQL + Redis + sample，profile=docker,test）"

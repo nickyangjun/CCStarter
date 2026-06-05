@@ -1,3 +1,6 @@
+# 全栈联调：MySQL + Redis + sample-boot-app（容器内 Maven 构建）
+# 用法见 deploy/README.md · docs/guides/docker.md
+
 services:
   mysql:
     image: mysql:8.0
@@ -28,8 +31,8 @@ services:
   sample-boot-app:
     image: ccstarter/sample-boot-app:local
     build:
-      context: ../..
-      dockerfile: deploy/sample/Dockerfile
+      context: ../../..
+      dockerfile: deploy/docker/stack/Dockerfile
       args:
         SKIP_TESTS: ${DOCKER_SKIP_TESTS:-1}
     ports:

@@ -1,4 +1,4 @@
-# 本地 Docker 联调：--spring.profiles.active=docker（见 deploy/sample/docker-compose.yml）
+# 本地 Docker 联调：profile=docker（stack 见 deploy/docker/stack；infra+宿主机 mvn 见 deploy/README.md）
 # 自动激活 test profile，登录/注册测试验证码与 application-test.yml 一致（固定码 123456）
 
 spring:

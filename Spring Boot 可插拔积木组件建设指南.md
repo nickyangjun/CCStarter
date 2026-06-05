@@ -118,7 +118,10 @@ company-component-parent/
 ├── CHANGELOG.md
 ├── Spring Boot 可插拔积木组件建设指南.md    # 本文件；或 symlink 至 docs/architecture/
 ├── docs/                                      # 文档中心（见第十五节）
-├── deploy/docker/                             # docker-compose、.env.example
+├── deploy/                                    # 见 deploy/README.md
+│   ├── docker/infra/                          # 本地中间件 compose
+│   ├── docker/stack/                          # 全栈 sample 镜像 + compose
+│   └── release/                               # Maven 发布说明
 ├── company-component-bom/
 ├── company-component-samples/
 │   └── sample-boot-app/                       # 集成验证；profile=docker
@@ -185,8 +188,8 @@ company-component-parent/
 | 项 | 规则 |
 |----|------|
 | 适用范围 | 开发、联调、样例工程、CI 集成测试；**不**打入 Maven 制品 |
-| 编排 | `deploy/docker/docker-compose.yml` + `.env.example` |
-| 应用配置 | Profile `docker` + `application-docker.yml`；主机名用 compose service name |
+| 编排 | `deploy/docker/infra`（中间件）、`deploy/docker/stack`（全栈）；见 `deploy/README.md` |
+| 应用配置 | Profile `docker` + `application-docker.yml`；stack 内主机名用 compose service name；infra+宿主机 mvn 用 `127.0.0.1` |
 | 与 `component.*` 关系 | Docker 管基础设施连通；组件行为仍由 `component.{feature}` 控制 |
 | 敏感信息 | `.env` 不入库；文档见 `docs/guides/docker.md` |
 
@@ -203,7 +206,7 @@ company-component-parent/
 ### 4.6 CI 最低要求
 
 - `mvn -B clean verify`（含单测、**代码风格检查**、**覆盖率校验**）
-- 可选：使用 `deploy/docker` 启动依赖后跑 sample 集成测试
+- 可选：使用 `deploy/docker/stack` 或 `deploy/docker/infra` 启动依赖后跑 sample 集成测试
 - 禁止合并：单测失败、覆盖率低于第三节阈值、未更新 CHANGELOG（行为变更时）
 
 ---

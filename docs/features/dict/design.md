@@ -1,6 +1,6 @@
 # common-dict · 详细设计（阶段 0）
 
-> **状态**：一期已实现（`DictService` + 缓存）；HTTP API 二期  
+> **状态**：一期已实现（`DictService` + 缓存 + 可选 HTTP API）；**二期**：树形字典、多语言、`@DictLabel`  
 > **配置前缀**：`component.dict`  
 > **Maven**：`common-dict-autoconfigure` + `common-dict-spring-boot-starter`
 
@@ -102,11 +102,11 @@ com.company.component.dict/
 │   ├── DictCache.java                  # 接口
 │   ├── InMemoryDictCache.java
 │   └── RedisDictCache.java             # @ConditionalOnClass + type=redis
-└── spi/
-    └── DictDataProvider.java
+├── spi/
+│   └── DictDataProvider.java
+└── web/
+    └── DictController.java             # api.enabled=true 时注册（一期已实现）
 ```
-
-**一期不创建** `web/DictController.java`（二期）。
 
 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`：
 
@@ -488,7 +488,7 @@ spring:
 | 协作 | 约定 |
 |------|------|
 | exception | 规划错误码：`DICT_TYPE_NOT_FOUND`、`DICT_LOAD_FAILED`；HTTP 4xx/5xx + 统一 JSON |
-| auth | 一期无 HTTP API，**无白名单需求**；二期 Controller 再合并白名单 |
+| auth | `DictController` 启用时自动合并白名单（`DictPathCollector`）；`api.enabled=false` 无白名单需求 |
 | log | 可选 DEBUG：`dict cache hit/miss type=...`；**禁止**打印全量字典敏感内容 |
 
 ---
@@ -501,7 +501,7 @@ spring:
 | 1 | POM 骨架 + `DictProperties` + 条件装配 | ✅ |
 | 2 | `DictDataProvider` SPI + `InMemoryDictCache` + `DictService` | ✅ |
 | 3 | `RedisDictCache` + `cache.type=redis` 分支 | ✅ |
-| 4 | 单测 + sample（`SampleDictSpiConfiguration`） | ✅ |
+| 4 | 单测 + sample（`JdbcDictDataProvider` + Flyway） | ✅ |
 | 5 | `integration.md` + BOM 登记 + CHANGELOG | ✅ |
 | 6 | `DictController` + auth 白名单合并 + 冒烟用例 | ✅ |
 
@@ -533,7 +533,7 @@ spring:
 | # | 决策 |
 |---|------|
 | 1 | 字典表统一 **`sys_dict_type` / `sys_dict_item`** |
-| 2 | 一期 **仅 `DictService` Bean**，不做 HTTP API |
+| 2 | 一期 **`DictService` Bean** + 可选 **`api.enabled` HTTP API** |
 | 3 | sample 默认 **`cache.type=memory`** |
 | 4 | **`docker` profile 使用 `redis`** |
 | 5 | Redis 连接只用 **`spring.data.redis.*`** |
@@ -549,4 +549,4 @@ spring:
 | 10 | `sys_dict_item` 增加 **`item_value` VARCHAR(512)**；`DictItem` + `getValue` API |
 | 11 | **命名分层**：库表 `snake_case`（`dict_type`）；Java/JSON `camelCase`（`dictType`）；映射见 §4.0 |
 
-**下一步**：评审通过后按 §11 阶段 1 创建 Maven 模块；编码前确认 [phase0-checklist.md](./phase0-checklist.md) 附录 C。
+**下一步**：一期已交付；二期（树形/多语言/`@DictLabel`）见 [README.md §一期不做](./README.md#一期不做)。

@@ -1,6 +1,6 @@
 # 组件库实施进度 TODO
 
-> **最后更新**：2026-06-05 | **当前阶段**：P1～P3 可发布；P2.1 auth login 已发布；**P5 dict 阶段 0 已完成**
+> **最后更新**：2026-06-05 | **当前阶段**：P1～P3、P2.1 login、P5 dict 可发布（SNAPSHOT）；短信/邮件 SDK 待对接
 
 ---
 
@@ -11,10 +11,11 @@
 | P0 | 工程骨架 | ✅ 已完成 |
 | P1 | common-exception | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | **P2** | common-auth（JWT / Security） | ✅ **可发布**（1.0.0-SNAPSHOT） |
-| **P2.1** | common-auth · login 编排 | ✅ **可发布**（**1.1.0-SNAPSHOT**；SDK/Redis 待办） |
+| **P2.1** | common-auth · login 编排 | ✅ **可发布**（**1.1.0-SNAPSHOT**；短信/邮件 SDK 待对接） |
+| **P2.1+** | common-auth-login-redis | ✅ **可发布**（**1.1.0-SNAPSHOT**） |
 | **P3** | common-log | ✅ **可发布**（1.0.0-SNAPSHOT） |
 | P4 | common-file | ⬜ 未开始 |
-| **P5** | common-dict | 🟡 **已实现**（SNAPSHOT；HTTP API 二期） |
+| **P5** | common-dict | ✅ **可发布**（1.0.0-SNAPSHOT；树形/多语言/@DictLabel 为二期） |
 | P6 | common-sms | ⬜ 未开始 |
 
 ---
@@ -87,10 +88,21 @@
 - [x] 根 README `scripts/` 章节；`scripts/README.md` 登录 401 排查说明
 - [ ] **[待办] `SmsCodeSender` 对接第三方短信 SDK**（阿里云/腾讯云等）
 - [ ] **[待办] `EmailCodeSender` 对接邮件服务**（SMTP/云邮件）
-- [ ] **[待办] 正式环境 `SmsCodeStore` / `EmailCodeStore` Redis 实现**
+- [x] 正式环境 `SmsCodeStore` / `EmailCodeStore` Redis 实现（`common-auth-login-redis-*`；`350a9df`）
 - [x] `docs/features/auth/integration.md` 增补 login 章节
 - [x] auth **MINOR** 版本号与 CHANGELOG（`1.1.0-SNAPSHOT`）
 - [x] test profile 配置分离（`application-test.yml`；`a4194d7`）
+
+### 4.4 登录 Redis Store（P2.1+ / auth MINOR）
+
+- [x] `common-auth-login-redis-autoconfigure`、`common-auth-login-redis-spring-boot-starter` POM
+- [x] 父工程 modules、BOM 登记
+- [x] `RedisSmsCodeStore` / `RedisEmailCodeStore`（`component.auth.login.redis.enabled` / `key-prefix`）
+- [x] Testcontainers Redis 单测
+- [x] sample `application-docker.yml` 启用 + compose 全栈联调
+- [x] CHANGELOG Unreleased 条目
+
+**发布坐标**：`com.company.component:common-auth-login-redis-spring-boot-starter:1.1.0-SNAPSHOT`（**可选**；需 `spring-boot-starter-data-redis`）
 
 ---
 
@@ -136,15 +148,19 @@
 - [x] `DictProperties` + `DictAutoConfiguration`
 - [x] SPI `DictDataProvider` + `DictService`
 - [x] `InMemoryDictCache` + `RedisDictCache`（`cache.type`）
-- [x] 单测 + sample `SampleDictSpiConfiguration` + `DictIntegrationTest`
+- [x] 单测 + sample `JdbcDictDataProvider` + Flyway + `DictIntegrationTest` / `DictApiIntegrationTest`
 - [x] `docs/features/dict/integration.md`
 - [x] `DictController` HTTP API + 冒烟 `GET /api/dict/gender`
+- [x] CI / 冒烟 / Docker 全栈（`deploy/docker/stack/docker-compose.yml`）
+- [ ] 私服 RELEASE 发布（按团队 Maven 流程执行 `deploy`）
+- [ ] 真实业务项目首次接入回归（可选）
+- [ ] **二期**：树形字典、多语言 label、Jackson `@DictLabel` 自动翻译
 
-**发布坐标**（规划）：`com.company.component:common-dict-spring-boot-starter:1.0.0-SNAPSHOT`
+**发布坐标**：`com.company.component:common-dict-spring-boot-starter:1.0.0-SNAPSHOT`
 
 | 模块 | 阶段 0 | 骨架 | 实现 | 发布 |
 |------|--------|------|------|------|
-| common-dict | ✅ [design.md](docs/features/dict/design.md) | ✅ | ✅ | 🟡 SNAPSHOT |
+| common-dict | ✅ [design.md](docs/features/dict/design.md) | ✅ | ✅ | ✅ SNAPSHOT |
 
 ---
 
@@ -164,6 +180,10 @@
 | 2026-06-05 | test profile 配置归位 + docker include test | `a4194d7` |
 | 2026-06-05 | P5 dict 阶段 0 设计文档 | 表规范 + DictService + memory/redis |
 | 2026-06-05 | P5 dict 编码（DictService + 缓存 + sample） | `mvn verify` 通过 |
+| 2026-06-05 | P5 dict HTTP API + 冒烟 + integration | `0ca4e3c` |
+| 2026-06-05 | login-redis starter + sample JDBC dict + Docker 全栈 | `350a9df` |
+| 2026-06-05 | deploy/sample 多阶段 Docker 构建 | `14801cb` |
+| 2026-06-05 | deploy 目录重组（docker/infra、docker/stack、release） | 文档与脚本路径更新 |
 
 ---
 
@@ -176,3 +196,4 @@
 - [auth 设计](./docs/features/auth/design.md)
 - [exception 模块](./docs/features/exception/)
 - [dict 设计](./docs/features/dict/design.md)
+- [dict 接入](./docs/features/dict/integration.md)

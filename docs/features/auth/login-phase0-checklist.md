@@ -36,4 +36,4 @@
 
 **阶段 0 结论**：✅ 已进入实现（登录编排 MINOR）
 
-**待办**：`SmsCodeSender` 第三方 SDK、`SmsCodeStore` Redis — 见根目录 `组件库实施进度 TODO.md` §4.3。
+**待办**：`SmsCodeSender` 第三方 SDK、`EmailCodeSender` 邮件服务 — 见根目录 `组件库实施进度 TODO.md` §4.3。Redis Store 已实现（§4.4 `common-auth-login-redis-*`）。
